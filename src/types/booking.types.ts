@@ -1,0 +1,45 @@
+export type VehicleType = 'byd' | 'onix' | null;
+
+export type MusicPreference = 'classical' | 'jazz' | 'pop' | 'electronic' | 'silence' | 'custom';
+
+export interface Location {
+  address: string;
+  lat?: number;
+  lng?: number;
+}
+
+export interface BookingState {
+  currentStep: number;
+  vehicle: VehicleType;
+  passengers: number;
+  luggage: number;
+  music: MusicPreference | null;
+  snacks: boolean;
+  drinks: string[];
+  origin: Location | null;
+  destination: Location | null;
+  pickupDate: Date | null;
+  pickupTime: string | null;
+  distance: number;
+  duration: number;
+  confirmationCode?: string;
+}
+
+export interface Vehicle {
+  id: VehicleType;
+  name: string;
+  model: string;
+  passengers: number;
+  luggage: number;
+  features: string[];
+  image: string;
+  eco?: boolean;
+}
+
+export interface PricingBreakdown {
+  baseFare: number;
+  distanceCharge: number;
+  passengerSurcharge: number;
+  amenities: number;
+  total: number;
+}

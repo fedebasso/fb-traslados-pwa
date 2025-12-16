@@ -1,0 +1,192 @@
+import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import { QRCodeSVG } from 'qrcode.react';
+import { Check, Download, CalendarPlus, Car, ArrowRight, Sparkles } from 'lucide-react';
+import { BookingState, PricingBreakdown } from '@/types/booking.types';
+import { vehicles } from './VehicleSelection';
+import { formatCurrency } from '@/services/pricingCalculator';
+import { format } from 'date-fns';
+
+interface ConfirmationProps {
+  state: BookingState;
+  pricing: PricingBreakdown;
+  onBookAnother: () => void;
+}
+
+export const Confirmation = ({ state, pricing, onBookAnother }: ConfirmationProps) => {
+  const [showContent, setShowContent] = useState(false);
+  const vehicle = vehicles.find(v => v.id === state.vehicle);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowContent(true), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const qrData = JSON.stringify({
+    code: state.confirmationCode,
+    vehicle: state.vehicle,
+    date: state.pickupDate?.toISOString(),
+  });
+
+  const handleAddToCalendar = () => {
+    if (!state.pickupDate || !state.pickupTime) return;
+    
+    const [hours, minutes] = state.pickupTime.split(':');
+    const startDate = new Date(state.pickupDate);
+    startDate.setHours(parseInt(hours), parseInt(minutes));
+    
+    const endDate = new Date(startDate);
+    endDate.setMinutes(endDate.getMinutes() + state.duration);
+    
+    const event = {
+      title: `Premium Shuttle - ${vehicle?.name}`,
+      start: startDate.toISOString().replace(/-|:|\.\d+/g, ''),
+      end: endDate.toISOString().replace(/-|:|\.\d+/g, ''),
+      location: state.origin?.address,
+      description: `Confirmation: ${state.confirmationCode}\nVehicle: ${vehicle?.name}\nFrom: ${state.origin?.address}\nTo: ${state.destination?.address}`,
+    };
+    
+    const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${event.start}/${event.end}&location=${encodeURIComponent(event.location || '')}&details=${encodeURIComponent(event.description)}`;
+    window.open(url, '_blank');
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center py-12">
+      <div className="w-full max-w-2xl mx-auto px-4">
+        {/* Success animation */}
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+          className="relative w-24 h-24 mx-auto mb-8"
+        >
+          <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping" />
+          <div className="relative w-full h-full rounded-full bg-gradient-to-br from-primary to-gold-dark flex items-center justify-center">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.3, type: 'spring' }}
+            >
+              <Check className="w-12 h-12 text-primary-foreground" strokeWidth={3} />
+            </motion.div>
+          </div>
+          
+          {/* Sparkles */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.5 }}
+            className="absolute -top-2 -right-2"
+          >
+            <Sparkles className="w-6 h-6 text-primary" />
+          </motion.div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: showContent ? 1 : 0, y: showContent ? 0 : 20 }}
+          transition={{ duration: 0.5 }}
+          className="space-y-8"
+        >
+          <div className="text-center space-y-2">
+            <h1 className="font-display text-4xl md:text-5xl font-bold text-foreground">
+              Booking <span className="text-gradient-gold">Confirmed!</span>
+            </h1>
+            <p className="text-lg text-muted-foreground">
+              Your premium ride has been successfully booked
+            </p>
+          </div>
+
+          {/* Confirmation card */}
+          <div className="glass-card p-6 md:p-8 space-y-6">
+            {/* Confirmation code */}
+            <div className="text-center pb-6 border-b border-border">
+              <p className="text-sm text-muted-foreground mb-2">Confirmation Code</p>
+              <p className="text-3xl font-mono font-bold text-gradient-gold tracking-wider">
+                {state.confirmationCode}
+              </p>
+            </div>
+
+            {/* QR Code */}
+            <div className="flex justify-center">
+              <div className="p-4 bg-white rounded-xl">
+                <QRCodeSVG
+                  value={qrData}
+                  size={150}
+                  level="H"
+                  includeMargin={false}
+                />
+              </div>
+            </div>
+            <p className="text-xs text-center text-muted-foreground">
+              Show this QR code to your driver for verification
+            </p>
+
+            {/* Booking details */}
+            <div className="space-y-4 pt-6 border-t border-border">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-12 rounded-lg bg-muted overflow-hidden flex-shrink-0">
+                  {vehicle && <img src={vehicle.image} alt={vehicle.name} className="w-full h-full object-contain" />}
+                </div>
+                <div className="flex-1">
+                  <p className="font-semibold text-foreground">{vehicle?.name}</p>
+                  <p className="text-sm text-muted-foreground">{vehicle?.model}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-xl font-display font-bold text-gradient-gold">
+                    {formatCurrency(pricing.total)}
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-lg bg-muted/50">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                  <p className="text-sm text-foreground">{state.origin?.address}</p>
+                </div>
+                <div className="flex items-center gap-3 pl-[3px] mb-3">
+                  <ArrowRight className="w-4 h-4 text-muted-foreground" />
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full bg-primary" />
+                  <p className="text-sm text-foreground">{state.destination?.address}</p>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Pickup Date & Time</span>
+                <span className="text-foreground font-medium">
+                  {state.pickupDate && format(state.pickupDate, 'MMM d, yyyy')} at {state.pickupTime}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Action buttons */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            <button
+              onClick={handleAddToCalendar}
+              className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-muted text-foreground font-medium hover:bg-muted/80 transition-colors"
+            >
+              <CalendarPlus className="w-5 h-5" />
+              Add to Calendar
+            </button>
+            <button
+              onClick={onBookAnother}
+              className="flex-1 btn-premium justify-center"
+            >
+              <Car className="w-5 h-5" />
+              Book Another Ride
+            </button>
+          </div>
+
+          <p className="text-center text-sm text-muted-foreground">
+            A confirmation email has been sent with all the details.
+            <br />
+            Thank you for choosing Premium Shuttle!
+          </p>
+        </motion.div>
+      </div>
+    </div>
+  );
+};
