@@ -11,6 +11,7 @@ import { DateTimePicker } from './DateTimePicker';
 import { BookingSummary } from './BookingSummary';
 import { Confirmation } from './Confirmation';
 import { useTranslation } from 'react-i18next';
+import { cn } from '@/lib/utils';
 
 interface BookingWizardProps {
   onClose: () => void;
@@ -204,7 +205,12 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
 
       {/* Content */}
       <div className={`${state.currentStep < 5 ? 'h-[calc(100vh-180px)]' : 'h-screen'} overflow-y-auto`}>
-        <div className="container mx-auto px-4 py-8">
+        <div
+          className={cn(
+            'container mx-auto px-4 py-8',
+            state.currentStep < 4 ? 'pb-32' : 'pb-8',
+          )}
+        >
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={state.currentStep}
