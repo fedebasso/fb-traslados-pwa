@@ -85,7 +85,10 @@ export const VehicleSelection = ({ selected, onSelect }: VehicleSelectionProps) 
               )}
 
               {/* Vehicle image */}
-              <div className="relative h-48 mb-4 overflow-hidden rounded-lg bg-gradient-to-br from-muted/50 to-muted">
+              <div
+                className="relative h-48 mb-4 overflow-hidden rounded-lg bg-gradient-to-br from-muted/50 to-muted"
+                style={{ marginTop: '25px' }}
+              >
                 <img
                   src={vehicle.image}
                   alt={vehicle.name}
