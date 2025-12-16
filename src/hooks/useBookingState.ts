@@ -20,6 +20,16 @@ const initialState: BookingState = {
 };
 
 export const useBookingState = () => {
+  const normalizeDrinks = (drinks: string[]) =>
+    drinks.map(drink => {
+      const lower = drink.toLowerCase();
+      if (lower.includes('sparkling')) return 'sparklingWater';
+      if (lower.includes('soft')) return 'softDrinks';
+      if (lower.includes('agua con gas')) return 'sparklingWater';
+      if (lower.includes('refriger')) return 'softDrinks';
+      return lower.includes('water') ? 'water' : drink;
+    });
+
   const [state, setState] = useState<BookingState>(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
@@ -27,6 +37,7 @@ export const useBookingState = () => {
       return {
         ...parsed,
         pickupDate: parsed.pickupDate ? new Date(parsed.pickupDate) : null,
+        drinks: parsed.drinks ? normalizeDrinks(parsed.drinks) : [],
       };
     }
     return initialState;

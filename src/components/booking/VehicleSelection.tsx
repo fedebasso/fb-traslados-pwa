@@ -3,6 +3,7 @@ import { Check, Users, Briefcase, Zap, Leaf } from 'lucide-react';
 import { VehicleType, Vehicle } from '@/types/booking.types';
 import bydImage from '@/assets/byd-yuan-pro.jpg';
 import onixImage from '@/assets/chevrolet-onix.jpeg';
+import { useTranslation } from 'react-i18next';
 
 const vehicles: Vehicle[] = [
   {
@@ -11,7 +12,7 @@ const vehicles: Vehicle[] = [
     model: 'Electric SUV',
     passengers: 4,
     luggage: 3,
-    features: ['100% Electric', 'Panoramic Roof', 'Premium Sound', 'Climate Control'],
+    features: ['electric', 'panoramicRoof', 'premiumSound', 'climateControl'],
     image: bydImage,
     eco: true,
   },
@@ -21,7 +22,7 @@ const vehicles: Vehicle[] = [
     model: 'Premium Sedan',
     passengers: 4,
     luggage: 2,
-    features: ['Fuel Efficient', 'Leather Seats', 'Bluetooth Audio', 'USB Charging'],
+    features: ['fuelEfficient', 'leatherSeats', 'bluetooth', 'usbCharging'],
     image: onixImage,
   },
 ];
@@ -32,14 +33,16 @@ interface VehicleSelectionProps {
 }
 
 export const VehicleSelection = ({ selected, onSelect }: VehicleSelectionProps) => {
+  const { t } = useTranslation();
+
   return (
     <div className="space-y-8">
       <div className="text-center space-y-2">
         <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">
-          Choose Your Vehicle
+          {t('vehicleSelection.title')}
         </h2>
         <p className="text-muted-foreground">
-          Select the perfect ride for your journey
+          {t('vehicleSelection.subtitle')}
         </p>
       </div>
 
@@ -77,7 +80,7 @@ export const VehicleSelection = ({ selected, onSelect }: VehicleSelectionProps) 
               {vehicle.eco && (
                 <div className="absolute top-4 left-4 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-medium">
                   <Leaf className="w-3 h-3" />
-                  Eco-Friendly
+                  {t('vehicleSelection.ecoBadge')}
                 </div>
               )}
 
@@ -94,20 +97,22 @@ export const VehicleSelection = ({ selected, onSelect }: VehicleSelectionProps) 
               <div className="space-y-4">
                 <div>
                   <h3 className="font-display text-xl font-semibold text-foreground">
-                    {vehicle.name}
+                    {t(`vehicleSelection.vehicles.${vehicle.id}.name`, { defaultValue: vehicle.name })}
                   </h3>
-                  <p className="text-sm text-muted-foreground">{vehicle.model}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {t(`vehicleSelection.vehicles.${vehicle.id}.model`, { defaultValue: vehicle.model })}
+                  </p>
                 </div>
 
                 {/* Capacity */}
                 <div className="flex items-center gap-4 text-sm">
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <Users className="w-4 h-4 text-primary" />
-                    <span>{vehicle.passengers} passengers</span>
+                    <span>{t('vehicleSelection.capacity.passengers', { count: vehicle.passengers })}</span>
                   </div>
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <Briefcase className="w-4 h-4 text-primary" />
-                    <span>{vehicle.luggage} bags</span>
+                    <span>{t('vehicleSelection.capacity.luggage', { count: vehicle.luggage })}</span>
                   </div>
                 </div>
 
@@ -119,7 +124,7 @@ export const VehicleSelection = ({ selected, onSelect }: VehicleSelectionProps) 
                       className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-muted text-xs text-muted-foreground"
                     >
                       <Zap className="w-3 h-3 text-primary" />
-                      {feature}
+                      {t(`vehicleSelection.features.${feature}`)}
                     </span>
                   ))}
                 </div>

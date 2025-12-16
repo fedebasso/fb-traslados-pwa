@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
-import { Check, Download, CalendarPlus, Car, ArrowRight, Sparkles } from 'lucide-react';
+import { Check, CalendarPlus, Car, ArrowRight, Sparkles } from 'lucide-react';
 import { BookingState, PricingBreakdown } from '@/types/booking.types';
 import { vehicles } from './VehicleSelection';
 import { formatCurrency } from '@/services/pricingCalculator';
 import { format } from 'date-fns';
+import { useTranslation } from 'react-i18next';
+import { getDateLocale } from '@/lib/i18n';
 
 interface ConfirmationProps {
   state: BookingState;
@@ -16,6 +18,10 @@ interface ConfirmationProps {
 export const Confirmation = ({ state, pricing, onBookAnother }: ConfirmationProps) => {
   const [showContent, setShowContent] = useState(false);
   const vehicle = vehicles.find(v => v.id === state.vehicle);
+  const { t, i18n } = useTranslation();
+  const dateLocale = getDateLocale(i18n.language);
+  const vehicleName = vehicle ? t(`vehicleSelection.vehicles.${vehicle.id}.name`, { defaultValue: vehicle.name }) : '';
+  const vehicleModel = vehicle ? t(`vehicleSelection.vehicles.${vehicle.id}.model`, { defaultValue: vehicle.model }) : '';
 
   useEffect(() => {
     const timer = setTimeout(() => setShowContent(true), 1500);
@@ -39,11 +45,16 @@ export const Confirmation = ({ state, pricing, onBookAnother }: ConfirmationProp
     endDate.setMinutes(endDate.getMinutes() + state.duration);
     
     const event = {
-      title: `Premium Shuttle - ${vehicle?.name}`,
+      title: t('confirmation.calendarTitle', { vehicle: vehicleName || vehicle?.name || '' }),
       start: startDate.toISOString().replace(/-|:|\.\d+/g, ''),
       end: endDate.toISOString().replace(/-|:|\.\d+/g, ''),
       location: state.origin?.address,
-      description: `Confirmation: ${state.confirmationCode}\nVehicle: ${vehicle?.name}\nFrom: ${state.origin?.address}\nTo: ${state.destination?.address}`,
+      description: t('confirmation.calendarDescription', {
+        code: state.confirmationCode,
+        vehicle: vehicleName || vehicle?.name || '',
+        origin: state.origin?.address,
+        destination: state.destination?.address,
+      }),
     };
     
     const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${event.start}/${event.end}&location=${encodeURIComponent(event.location || '')}&details=${encodeURIComponent(event.description)}`;
@@ -90,10 +101,19 @@ export const Confirmation = ({ state, pricing, onBookAnother }: ConfirmationProp
         >
           <div className="text-center space-y-2">
             <h1 className="font-display text-4xl md:text-5xl font-bold text-foreground">
-              Booking <span className="text-gradient-gold">Confirmed!</span>
+              {(() => {
+                const titleParts = t('confirmation.title').split(' ');
+                const lastWord = titleParts.pop() || '';
+                return (
+                  <>
+                    {titleParts.join(' ')} {''}
+                    <span className="text-gradient-gold">{lastWord}</span>
+                  </>
+                );
+              })()}
             </h1>
             <p className="text-lg text-muted-foreground">
-              Your premium ride has been successfully booked
+              {t('confirmation.subtitle')}
             </p>
           </div>
 
@@ -101,7 +121,7 @@ export const Confirmation = ({ state, pricing, onBookAnother }: ConfirmationProp
           <div className="glass-card p-6 md:p-8 space-y-6">
             {/* Confirmation code */}
             <div className="text-center pb-6 border-b border-border">
-              <p className="text-sm text-muted-foreground mb-2">Confirmation Code</p>
+              <p className="text-sm text-muted-foreground mb-2">{t('confirmation.code')}</p>
               <p className="text-3xl font-mono font-bold text-gradient-gold tracking-wider">
                 {state.confirmationCode}
               </p>
@@ -119,7 +139,7 @@ export const Confirmation = ({ state, pricing, onBookAnother }: ConfirmationProp
               </div>
             </div>
             <p className="text-xs text-center text-muted-foreground">
-              Show this QR code to your driver for verification
+              {t('confirmation.qrNote')}
             </p>
 
             {/* Booking details */}
@@ -129,8 +149,8 @@ export const Confirmation = ({ state, pricing, onBookAnother }: ConfirmationProp
                   {vehicle && <img src={vehicle.image} alt={vehicle.name} className="w-full h-full object-contain" />}
                 </div>
                 <div className="flex-1">
-                  <p className="font-semibold text-foreground">{vehicle?.name}</p>
-                  <p className="text-sm text-muted-foreground">{vehicle?.model}</p>
+                  <p className="font-semibold text-foreground">{vehicleName}</p>
+                  <p className="text-sm text-muted-foreground">{vehicleModel}</p>
                 </div>
                 <div className="text-right">
                   <p className="text-xl font-display font-bold text-gradient-gold">
@@ -154,9 +174,9 @@ export const Confirmation = ({ state, pricing, onBookAnother }: ConfirmationProp
               </div>
 
               <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Pickup Date & Time</span>
+                <span className="text-muted-foreground">{t('confirmation.pickupTime')}</span>
                 <span className="text-foreground font-medium">
-                  {state.pickupDate && format(state.pickupDate, 'MMM d, yyyy')} at {state.pickupTime}
+                  {state.pickupDate && format(state.pickupDate, 'MMM d, yyyy', { locale: dateLocale })} {t('dateTimePicker.pickupAt', { time: state.pickupTime || '' })}
                 </span>
               </div>
             </div>
@@ -169,21 +189,26 @@ export const Confirmation = ({ state, pricing, onBookAnother }: ConfirmationProp
               className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-muted text-foreground font-medium hover:bg-muted/80 transition-colors"
             >
               <CalendarPlus className="w-5 h-5" />
-              Add to Calendar
+              {t('confirmation.addToCalendar')}
             </button>
             <button
               onClick={onBookAnother}
               className="flex-1 btn-premium justify-center"
             >
               <Car className="w-5 h-5" />
-              Book Another Ride
+              {t('confirmation.bookAnother')}
             </button>
           </div>
 
           <p className="text-center text-sm text-muted-foreground">
-            A confirmation email has been sent with all the details.
-            <br />
-            Thank you for choosing Premium Shuttle!
+            {t('confirmation.footer')
+              .split('\n')
+              .map((line, i) => (
+                <span key={line}>
+                  {line}
+                  {i === 0 && <br />}
+                </span>
+              ))}
           </p>
         </motion.div>
       </div>

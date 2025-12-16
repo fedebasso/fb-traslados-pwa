@@ -10,12 +10,11 @@ import { LocationPicker } from './LocationPicker';
 import { DateTimePicker } from './DateTimePicker';
 import { BookingSummary } from './BookingSummary';
 import { Confirmation } from './Confirmation';
+import { useTranslation } from 'react-i18next';
 
 interface BookingWizardProps {
   onClose: () => void;
 }
-
-const stepLabels = ['Vehicle', 'Details', 'Location', 'Schedule', 'Review', 'Confirmed'];
 
 export const BookingWizard = ({ onClose }: BookingWizardProps) => {
   const {
@@ -42,6 +41,15 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
 
   const [direction, setDirection] = useState(1);
   const pricing = calculatePricing(state);
+  const { t } = useTranslation();
+  const stepLabels = [
+    t('bookingWizard.steps.vehicle'),
+    t('bookingWizard.steps.details'),
+    t('bookingWizard.steps.location'),
+    t('bookingWizard.steps.schedule'),
+    t('bookingWizard.steps.review'),
+    t('bookingWizard.steps.confirmed'),
+  ];
   
   const selectedVehicle = vehicles.find(v => v.id === state.vehicle);
   const maxPassengers = selectedVehicle?.passengers || 4;
@@ -181,7 +189,7 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
                 <X className="w-5 h-5" />
               </button>
               <h1 className="font-display text-xl font-semibold text-foreground">
-                Book Your Ride
+                {t('bookingWizard.title')}
               </h1>
               <div className="w-9" /> {/* Spacer */}
             </div>
@@ -224,13 +232,13 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
                 className="flex items-center gap-2 px-4 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors disabled:opacity-0"
               >
                 <ChevronLeft className="w-5 h-5" />
-                Back
+                {t('bookingWizard.actions.back')}
               </button>
 
               {/* Price preview */}
               {state.vehicle && (
                 <div className="text-center">
-                  <p className="text-xs text-muted-foreground">Estimated</p>
+                  <p className="text-xs text-muted-foreground">{t('bookingWizard.actions.estimated')}</p>
                   <p className="text-lg font-display font-bold text-gradient-gold">
                     ${pricing.total.toFixed(2)}
                   </p>
@@ -242,7 +250,7 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
                 disabled={!canProceed(state.currentStep)}
                 className="flex items-center gap-2 btn-premium disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Continue
+                {t('bookingWizard.actions.continue')}
                 <ChevronRight className="w-5 h-5" />
               </button>
             </div>

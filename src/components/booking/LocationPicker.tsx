@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Navigation, ArrowRight, Search } from 'lucide-react';
 import { Location } from '@/types/booking.types';
+import { useTranslation } from 'react-i18next';
 
 interface LocationPickerProps {
   origin: Location | null;
@@ -29,6 +30,7 @@ export const LocationPicker = ({
   onDistanceChange,
   onDurationChange,
 }: LocationPickerProps) => {
+  const { t } = useTranslation();
   const [originSearch, setOriginSearch] = useState(origin?.address || '');
   const [destinationSearch, setDestinationSearch] = useState(destination?.address || '');
   const [showOriginSuggestions, setShowOriginSuggestions] = useState(false);
@@ -83,10 +85,10 @@ export const LocationPicker = ({
     <div className="space-y-8">
       <div className="text-center space-y-2">
         <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">
-          Select Locations
+          {t('locationPicker.title')}
         </h2>
         <p className="text-muted-foreground">
-          Where would you like to go?
+          {t('locationPicker.subtitle')}
         </p>
       </div>
 
@@ -118,7 +120,7 @@ export const LocationPicker = ({
                   }}
                   onFocus={() => setShowOriginSuggestions(true)}
                   onBlur={() => setTimeout(() => setShowOriginSuggestions(false), 200)}
-                  placeholder="Pickup location"
+                  placeholder={t('locationPicker.pickupPlaceholder')}
                   className="input-premium w-full pl-12 pr-10"
                 />
                 <Search className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -154,7 +156,7 @@ export const LocationPicker = ({
                   }}
                   onFocus={() => setShowDestinationSuggestions(true)}
                   onBlur={() => setTimeout(() => setShowDestinationSuggestions(false), 200)}
-                  placeholder="Drop-off location"
+                  placeholder={t('locationPicker.dropoffPlaceholder')}
                   className="input-premium w-full pl-12 pr-10"
                 />
                 <Search className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -191,18 +193,23 @@ export const LocationPicker = ({
                   <ArrowRight className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Estimated Route</p>
+                  <p className="text-sm text-muted-foreground">{t('locationPicker.estimatedRoute')}</p>
                   <p className="text-foreground font-medium">
-                    {origin.address.split(' ')[0]} → {destination.address.split(' ')[0]}
+                    {t('locationPicker.routeLabel', {
+                      from: origin.address.split(' ')[0],
+                      to: destination.address.split(' ')[0],
+                    })}
                   </p>
                 </div>
               </div>
               <div className="text-right">
                 <p className="text-2xl font-display font-bold text-gradient-gold">
-                  {calculateDistance(origin, destination)} km
+                  {t('locationPicker.distanceLabel', { distance: calculateDistance(origin, destination) })}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  ~{Math.round(calculateDistance(origin, destination) * 2.5)} min
+                  {t('locationPicker.durationLabel', {
+                    minutes: Math.round(calculateDistance(origin, destination) * 2.5),
+                  })}
                 </p>
               </div>
             </div>
@@ -211,7 +218,7 @@ export const LocationPicker = ({
 
         {/* Popular locations */}
         <div className="pt-4 border-t border-border/50">
-          <p className="text-sm text-muted-foreground mb-3">Popular destinations</p>
+          <p className="text-sm text-muted-foreground mb-3">{t('locationPicker.popular')}</p>
           <div className="flex flex-wrap gap-2">
             {popularLocations.slice(0, 4).map((loc, i) => (
               <button

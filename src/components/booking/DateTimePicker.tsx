@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, ChevronLeft, ChevronRight } from 'lucide-react';
 import { format, addDays, isBefore, startOfDay, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, isToday } from 'date-fns';
+import { useTranslation } from 'react-i18next';
+import { getDateLocale } from '@/lib/i18n';
 
 interface DateTimePickerProps {
   selectedDate: Date | null;
@@ -26,6 +28,9 @@ export const DateTimePicker = ({
   onTimeChange,
 }: DateTimePickerProps) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const { t, i18n } = useTranslation();
+  const dateLocale = getDateLocale(i18n.language);
+  const weekdayLabels = t('dateTimePicker.weekdays', { returnObjects: true }) as string[];
   
   const today = startOfDay(new Date());
   const minDate = addDays(today, 1); // Minimum 24h advance
@@ -54,10 +59,10 @@ export const DateTimePicker = ({
     <div className="space-y-8">
       <div className="text-center space-y-2">
         <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">
-          Pick Date & Time
+          {t('dateTimePicker.title')}
         </h2>
         <p className="text-muted-foreground">
-          When should we pick you up?
+          {t('dateTimePicker.subtitle')}
         </p>
       </div>
 
@@ -72,7 +77,7 @@ export const DateTimePicker = ({
             <div className="p-2 rounded-lg bg-primary/10">
               <Calendar className="w-5 h-5 text-primary" />
             </div>
-            <h3 className="font-display text-lg font-semibold text-foreground">Select Date</h3>
+            <h3 className="font-display text-lg font-semibold text-foreground">{t('dateTimePicker.selectDate')}</h3>
           </div>
 
           {/* Month navigation */}
@@ -84,7 +89,7 @@ export const DateTimePicker = ({
               <ChevronLeft className="w-5 h-5 text-muted-foreground" />
             </button>
             <span className="font-medium text-foreground">
-              {format(currentMonth, 'MMMM yyyy')}
+              {format(currentMonth, 'MMMM yyyy', { locale: dateLocale })}
             </span>
             <button
               onClick={handleNextMonth}
@@ -96,7 +101,7 @@ export const DateTimePicker = ({
 
           {/* Weekday headers */}
           <div className="grid grid-cols-7 mb-2">
-            {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(day => (
+            {weekdayLabels?.map(day => (
               <div key={day} className="text-center text-xs text-muted-foreground py-2">
                 {day}
               </div>
@@ -137,7 +142,7 @@ export const DateTimePicker = ({
           {selectedDate && (
             <div className="mt-4 p-3 rounded-lg bg-primary/10 text-center">
               <p className="text-sm text-primary font-medium">
-                {format(selectedDate, 'EEEE, MMMM d, yyyy')}
+                {format(selectedDate, 'EEEE, MMMM d, yyyy', { locale: dateLocale })}
               </p>
             </div>
           )}
@@ -154,7 +159,7 @@ export const DateTimePicker = ({
             <div className="p-2 rounded-lg bg-primary/10">
               <Clock className="w-5 h-5 text-primary" />
             </div>
-            <h3 className="font-display text-lg font-semibold text-foreground">Select Time</h3>
+            <h3 className="font-display text-lg font-semibold text-foreground">{t('dateTimePicker.selectTime')}</h3>
           </div>
 
           <div className="grid grid-cols-4 gap-2 max-h-80 overflow-y-auto pr-2 custom-scrollbar">
@@ -177,7 +182,7 @@ export const DateTimePicker = ({
           {selectedTime && (
             <div className="mt-4 p-3 rounded-lg bg-primary/10 text-center">
               <p className="text-sm text-primary font-medium">
-                Pickup at {selectedTime}
+                {t('dateTimePicker.pickupAt', { time: selectedTime })}
               </p>
             </div>
           )}
@@ -192,10 +197,10 @@ export const DateTimePicker = ({
           className="text-center p-4 rounded-lg bg-muted/50 border border-primary/20"
         >
           <p className="text-lg text-foreground">
-            Your pickup is scheduled for{' '}
-            <span className="text-gradient-gold font-semibold">
-              {format(selectedDate, 'MMMM d, yyyy')} at {selectedTime}
-            </span>
+            {t('dateTimePicker.scheduleSummary', {
+              date: format(selectedDate, 'MMMM d, yyyy', { locale: dateLocale }),
+              time: selectedTime,
+            })}
           </p>
         </motion.div>
       )}

@@ -1,14 +1,19 @@
 import { motion } from 'framer-motion';
 import { WaterDropEffect } from './WaterDropEffect';
 import { ChevronRight, Shield, Clock, Star } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import fbLogoMobile from '@/assets/Fb_logo_2_192x192.png';
+import fbLogoDesktop from '@/assets/Fb_logo_2_512x512.png';
 
 interface HeroSectionProps {
   onBookNow: () => void;
 }
 
 export const HeroSection = ({ onBookNow }: HeroSectionProps) => {
+  const { t } = useTranslation();
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-background via-background to-card">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-background via-background to-card pt-20">
       {/* Ambient background effects */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_hsl(45_70%_50%_/_0.05),_transparent_50%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_hsl(222_47%_15%_/_0.3),_transparent_60%)]" />
@@ -24,6 +29,17 @@ export const HeroSection = ({ onBookNow }: HeroSectionProps) => {
           transition={{ duration: 0.8, ease: 'easeOut' }}
           className="space-y-8"
         >
+          <div className="flex justify-center" style={{ marginBottom: '5px' }}>
+            <picture>
+              <source media="(min-width: 768px)" srcSet={fbLogoDesktop} />
+              <img
+                src={fbLogoMobile}
+                alt={t('nav.brand')}
+                className="object-contain w-[192px] h-[192px] md:w-[512px] md:h-[512px]"
+              />
+            </picture>
+          </div>
+
           {/* Badge */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -32,20 +48,19 @@ export const HeroSection = ({ onBookNow }: HeroSectionProps) => {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium"
           >
             <Star className="w-4 h-4 fill-primary" />
-            Premium Shuttle Service
+            {t('hero.badge')}
           </motion.div>
 
           {/* Main headline */}
           <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-bold leading-tight">
-            <span className="text-foreground">Travel in</span>
+            <span className="text-foreground">{t('hero.title.lead')}</span>
             <br />
-            <span className="text-gradient-gold">Elegance</span>
+            <span className="text-gradient-gold">{t('hero.title.highlight')}</span>
           </h1>
 
           {/* Subtitle */}
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Experience the pinnacle of comfort with our premium shuttle service. 
-            Luxury vehicles, professional chauffeurs, and seamless journeys await.
+            {t('hero.subtitle')}
           </p>
 
           {/* CTA Button */}
@@ -59,7 +74,7 @@ export const HeroSection = ({ onBookNow }: HeroSectionProps) => {
               onClick={onBookNow}
               className="group relative inline-flex items-center gap-3 btn-premium text-lg"
             >
-              Book Your Premium Ride
+              {t('hero.cta')}
               <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
             </button>
           </motion.div>
@@ -75,19 +90,19 @@ export const HeroSection = ({ onBookNow }: HeroSectionProps) => {
               <div className="p-2 rounded-lg bg-primary/10">
                 <Shield className="w-5 h-5 text-primary" />
               </div>
-              <span className="text-sm">Insured & Licensed</span>
+              <span className="text-sm">{t('hero.trust.insured')}</span>
             </div>
             <div className="flex items-center gap-3 text-muted-foreground">
               <div className="p-2 rounded-lg bg-primary/10">
                 <Clock className="w-5 h-5 text-primary" />
               </div>
-              <span className="text-sm">24/7 Availability</span>
+              <span className="text-sm">{t('hero.trust.availability')}</span>
             </div>
             <div className="flex items-center gap-3 text-muted-foreground">
               <div className="p-2 rounded-lg bg-primary/10">
                 <Star className="w-5 h-5 text-primary" />
               </div>
-              <span className="text-sm">5-Star Rated</span>
+              <span className="text-sm">{t('hero.trust.rating')}</span>
             </div>
           </motion.div>
         </motion.div>

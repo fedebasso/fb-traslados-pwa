@@ -1,16 +1,11 @@
 import { motion } from 'framer-motion';
 import { Users, Briefcase, Music, Coffee, GlassWater, Minus, Plus } from 'lucide-react';
 import { MusicPreference } from '@/types/booking.types';
+import { useTranslation } from 'react-i18next';
 
-const musicOptions: { value: MusicPreference; label: string }[] = [
-  { value: 'classical', label: 'Classical' },
-  { value: 'jazz', label: 'Jazz' },
-  { value: 'pop', label: 'Pop' },
-  { value: 'electronic', label: 'Electronic' },
-  { value: 'silence', label: 'Silence' },
-];
+const musicOptions: MusicPreference[] = ['classical', 'jazz', 'pop', 'electronic', 'silence'];
 
-const drinkOptions = ['Water', 'Sparkling Water', 'Soft Drinks'];
+const drinkOptions = ['water', 'sparklingWater', 'softDrinks'];
 
 interface TripDetailsProps {
   passengers: number;
@@ -41,6 +36,8 @@ export const TripDetails = ({
   onSnacksChange,
   onDrinksChange,
 }: TripDetailsProps) => {
+  const { t } = useTranslation();
+
   const toggleDrink = (drink: string) => {
     if (drinks.includes(drink)) {
       onDrinksChange(drinks.filter(d => d !== drink));
@@ -53,10 +50,10 @@ export const TripDetails = ({
     <div className="space-y-8">
       <div className="text-center space-y-2">
         <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">
-          Trip Details
+          {t('tripDetails.title')}
         </h2>
         <p className="text-muted-foreground">
-          Customize your journey experience
+          {t('tripDetails.subtitle')}
         </p>
       </div>
 
@@ -69,13 +66,13 @@ export const TripDetails = ({
         >
           <h3 className="font-display text-lg font-semibold text-foreground flex items-center gap-2">
             <Users className="w-5 h-5 text-primary" />
-            Passengers & Luggage
+            {t('tripDetails.passengersAndLuggage')}
           </h3>
 
           <div className="grid sm:grid-cols-2 gap-6">
             {/* Passengers counter */}
             <div className="space-y-3">
-              <label className="text-sm text-muted-foreground">Number of Passengers</label>
+              <label className="text-sm text-muted-foreground">{t('tripDetails.passengerCount')}</label>
               <div className="flex items-center gap-4">
                 <button
                   onClick={() => onPassengersChange(Math.max(1, passengers - 1))}
@@ -96,7 +93,7 @@ export const TripDetails = ({
                 </button>
               </div>
               {passengers >= maxPassengers && (
-                <p className="text-xs text-primary">Maximum capacity reached</p>
+                <p className="text-xs text-primary">{t('tripDetails.maxPassengers')}</p>
               )}
             </div>
 
@@ -104,7 +101,7 @@ export const TripDetails = ({
             <div className="space-y-3">
               <label className="text-sm text-muted-foreground flex items-center gap-2">
                 <Briefcase className="w-4 h-4" />
-                Luggage Items
+                {t('tripDetails.luggageLabel')}
               </label>
               <div className="flex items-center gap-4">
                 <button
@@ -138,26 +135,26 @@ export const TripDetails = ({
         >
           <h3 className="font-display text-lg font-semibold text-foreground flex items-center gap-2">
             <Music className="w-5 h-5 text-primary" />
-            Amenities
-            <span className="text-xs font-normal text-muted-foreground">(optional)</span>
+            {t('tripDetails.amenities')}
+            <span className="text-xs font-normal text-muted-foreground">{t('tripDetails.optional')}</span>
           </h3>
 
           {/* Music preference */}
           <div className="space-y-3">
-            <label className="text-sm text-muted-foreground">Music Preference</label>
+            <label className="text-sm text-muted-foreground">{t('tripDetails.musicPreference')}</label>
             <div className="flex flex-wrap gap-2">
               {musicOptions.map(option => (
                 <button
-                  key={option.value}
-                  onClick={() => onMusicChange(music === option.value ? null : option.value)}
+                  key={option}
+                  onClick={() => onMusicChange(music === option ? null : option)}
                   className={`
                     px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
-                    ${music === option.value 
+                    ${music === option 
                       ? 'bg-primary text-primary-foreground' 
                       : 'bg-muted text-muted-foreground hover:bg-muted/80'}
                   `}
                 >
-                  {option.label}
+                  {t(`tripDetails.musicOptions.${option}`)}
                 </button>
               ))}
             </div>
@@ -167,7 +164,7 @@ export const TripDetails = ({
           <div className="space-y-3">
             <label className="text-sm text-muted-foreground flex items-center gap-2">
               <Coffee className="w-4 h-4" />
-              Premium Snacks
+              {t('tripDetails.snacks')}
             </label>
             <button
               onClick={() => onSnacksChange(!snacks)}
@@ -176,10 +173,10 @@ export const TripDetails = ({
                 ${snacks 
                   ? 'border-primary bg-primary/10 text-foreground' 
                   : 'border-border bg-muted/50 text-muted-foreground hover:border-primary/50'}
-              `}
+                `}
             >
               <div className="flex items-center justify-between">
-                <span>Gourmet snack selection</span>
+                <span>{t('tripDetails.snackDescription')}</span>
                 <div className={`
                   w-5 h-5 rounded border flex items-center justify-center
                   ${snacks ? 'bg-primary border-primary' : 'border-muted-foreground/50'}
@@ -194,7 +191,7 @@ export const TripDetails = ({
           <div className="space-y-3">
             <label className="text-sm text-muted-foreground flex items-center gap-2">
               <GlassWater className="w-4 h-4" />
-              Beverages
+              {t('tripDetails.beverages')}
             </label>
             <div className="grid grid-cols-3 gap-2">
               {drinkOptions.map(drink => (
@@ -208,7 +205,7 @@ export const TripDetails = ({
                       : 'bg-muted text-muted-foreground hover:bg-muted/80'}
                   `}
                 >
-                  {drink}
+                  {t(`tripDetails.drinkOptions.${drink}`)}
                 </button>
               ))}
             </div>
