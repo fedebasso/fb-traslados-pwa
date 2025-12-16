@@ -164,6 +164,7 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
             state={state}
             pricing={pricing}
             onBookAnother={handleBookAnother}
+            onGoHome={onClose}
           />
         );
       default:
@@ -180,7 +181,7 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
     >
       {/* Header */}
       {state.currentStep < 5 && (
-        <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-xl border-b border-border">
+        <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-xl border-b border-border safe-px">
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between mb-4">
               <button
@@ -204,7 +205,12 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
       )}
 
       {/* Content */}
-      <div className={`${state.currentStep < 5 ? 'h-[calc(100vh-180px)]' : 'h-screen'} overflow-y-auto`}>
+      <div
+        className={`${
+          state.currentStep < 5 ? 'h-[calc(100dvh-180px)]' : 'h-[100dvh]'
+        } overflow-y-auto`}
+        style={{ WebkitOverflowScrolling: 'touch' }}
+      >
         <div
           className={cn(
             'container mx-auto px-4 py-8',
@@ -229,7 +235,7 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
 
       {/* Footer navigation */}
       {state.currentStep < 4 && (
-        <div className="fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-xl border-t border-border">
+        <div className="fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-xl border-t border-border safe-px safe-pb">
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
               <button

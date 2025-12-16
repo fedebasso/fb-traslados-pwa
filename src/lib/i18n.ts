@@ -167,6 +167,7 @@ const resources = {
         pickupTime: "Pickup Date & Time",
         addToCalendar: "Add to Calendar",
         bookAnother: "Book Another Ride",
+        goHome: "Go to home",
         footer:
           "A confirmation email has been sent with all the details.\nThank you for choosing Premium Shuttle!",
         calendarTitle: "Premium Shuttle - {{vehicle}}",
@@ -333,6 +334,7 @@ const resources = {
         pickupTime: "Fecha y hora de recogida",
         addToCalendar: "Agregar al calendario",
         bookAnother: "Reservar otro viaje",
+        goHome: "Volver al inicio",
         footer:
           "Se envió un correo de confirmación con todos los detalles.\nGracias por elegir Premium Shuttle!",
         calendarTitle: "Traslado premium - {{vehicle}}",
@@ -499,6 +501,7 @@ const resources = {
         pickupTime: "Data e horário de embarque",
         addToCalendar: "Adicionar ao calendário",
         bookAnother: "Reservar outra viagem",
+        goHome: "Voltar para o início",
         footer:
           "Um e-mail de confirmação foi enviado com todos os detalhes.\nObrigado por escolher a Premium Shuttle!",
         calendarTitle: "Traslado premium - {{vehicle}}",

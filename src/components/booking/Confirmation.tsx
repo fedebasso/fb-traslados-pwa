@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
-import { Check, CalendarPlus, Car, ArrowRight, Sparkles } from 'lucide-react';
+import { Check, CalendarPlus, Car, ArrowRight, Sparkles, Home } from 'lucide-react';
 import { BookingState, PricingBreakdown } from '@/types/booking.types';
 import { vehicles } from './VehicleSelection';
 import { formatCurrency } from '@/services/pricingCalculator';
@@ -13,9 +13,10 @@ interface ConfirmationProps {
   state: BookingState;
   pricing: PricingBreakdown;
   onBookAnother: () => void;
+  onGoHome: () => void;
 }
 
-export const Confirmation = ({ state, pricing, onBookAnother }: ConfirmationProps) => {
+export const Confirmation = ({ state, pricing, onBookAnother, onGoHome }: ConfirmationProps) => {
   const [showContent, setShowContent] = useState(false);
   const vehicle = vehicles.find(v => v.id === state.vehicle);
   const { t, i18n } = useTranslation();
@@ -199,6 +200,14 @@ export const Confirmation = ({ state, pricing, onBookAnother }: ConfirmationProp
               {t('confirmation.bookAnother')}
             </button>
           </div>
+
+          <button
+            onClick={onGoHome}
+            className="w-full flex items-center justify-center gap-2 rounded-lg border border-border px-6 py-3 text-foreground hover:bg-muted/60 transition-colors"
+          >
+            <Home className="w-5 h-5" />
+            {t('confirmation.goHome', { defaultValue: 'Go to home' })}
+          </button>
 
           <p className="text-center text-sm text-muted-foreground">
             {t('confirmation.footer')

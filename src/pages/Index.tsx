@@ -8,7 +8,7 @@ const Index = () => {
   const [showBooking, setShowBooking] = useState(false);
 
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-[100dvh] bg-background safe-px">
       <TopNav onBookNow={() => setShowBooking(true)} />
       <div className="pt-16">
         <AnimatePresence mode="wait">
