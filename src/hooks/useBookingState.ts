@@ -17,6 +17,7 @@ const initialState: BookingState = {
   pickupTime: null,
   distance: 0,
   duration: 0,
+  email: '',
 };
 
 export const useBookingState = () => {
@@ -95,6 +96,10 @@ export const useBookingState = () => {
     setState(prev => ({ ...prev, duration }));
   }, []);
 
+  const setEmail = useCallback((email: string) => {
+    setState(prev => ({ ...prev, email }));
+  }, []);
+
   const nextStep = useCallback(() => {
     setState(prev => ({ ...prev, currentStep: Math.min(prev.currentStep + 1, 5) }));
   }, []);
@@ -116,6 +121,11 @@ export const useBookingState = () => {
     localStorage.removeItem(STORAGE_KEY);
   }, []);
 
+  const isValidEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const canProceed = useCallback((step: number): boolean => {
     switch (step) {
       case 0:
@@ -127,7 +137,7 @@ export const useBookingState = () => {
       case 3:
         return state.pickupDate !== null && state.pickupTime !== null;
       case 4:
-        return true;
+        return isValidEmail(state.email);
       default:
         return false;
     }
@@ -147,6 +157,7 @@ export const useBookingState = () => {
     setPickupTime,
     setDistance,
     setDuration,
+    setEmail,
     nextStep,
     prevStep,
     goToStep,

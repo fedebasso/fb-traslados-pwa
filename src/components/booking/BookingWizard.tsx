@@ -32,6 +32,7 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
     setPickupTime,
     setDistance,
     setDuration,
+    setEmail,
     nextStep,
     prevStep,
     goToStep,
@@ -156,6 +157,7 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
             pricing={pricing}
             onEdit={handleGoToStep}
             onConfirm={handleConfirm}
+            onEmailChange={setEmail}
           />
         );
       case 5:

@@ -6,15 +6,17 @@ import { formatCurrency } from '@/services/pricingCalculator';
 import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { getDateLocale } from '@/lib/i18n';
+import { EmailInput } from './EmailInput';
 
 interface BookingSummaryProps {
   state: BookingState;
   pricing: PricingBreakdown;
   onEdit: (step: number) => void;
   onConfirm: () => void;
+  onEmailChange: (email: string) => void;
 }
 
-export const BookingSummary = ({ state, pricing, onEdit, onConfirm }: BookingSummaryProps) => {
+export const BookingSummary = ({ state, pricing, onEdit, onConfirm, onEmailChange }: BookingSummaryProps) => {
   const vehicle = vehicles.find(v => v.id === state.vehicle);
   const { t, i18n } = useTranslation();
   const dateLocale = getDateLocale(i18n.language);
@@ -205,58 +207,26 @@ export const BookingSummary = ({ state, pricing, onEdit, onConfirm }: BookingSum
           </motion.div>
         </div>
 
-        {/* Right column - Pricing */}
+        {/* Right column - Email */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
           className="glass-card p-6 h-fit sticky top-6"
         >
-          <h3 className="font-display text-lg font-semibold text-foreground mb-6">
-            {t('bookingSummary.priceBreakdown')}
-          </h3>
-          
-          <div className="space-y-3">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">{t('bookingSummary.baseFare')}</span>
-              <span className="text-foreground">{formatCurrency(pricing.baseFare)}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">
-                {t('bookingSummary.distanceCharge', { distance: state.distance })}
-              </span>
-              <span className="text-foreground">{formatCurrency(pricing.distanceCharge)}</span>
-            </div>
-            {pricing.passengerSurcharge > 0 && (
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">{t('bookingSummary.extraPassengers')}</span>
-                <span className="text-foreground">{formatCurrency(pricing.passengerSurcharge)}</span>
-              </div>
-            )}
-            {pricing.amenities > 0 && (
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">{t('bookingSummary.amenities')}</span>
-                <span className="text-foreground">{formatCurrency(pricing.amenities)}</span>
-              </div>
-            )}
-            
-            <div className="pt-4 mt-4 border-t border-border">
-              <div className="flex justify-between items-center">
-                <span className="text-foreground font-medium">{t('bookingSummary.total')}</span>
-                <span className="text-2xl font-display font-bold text-gradient-gold">
-                  {formatCurrency(pricing.total)}
-                </span>
-              </div>
-            </div>
-          </div>
+          <EmailInput
+            value={state.email}
+            onChange={onEmailChange}
+          />
 
           <button
             onClick={onConfirm}
-            className="w-full mt-6 btn-premium justify-center"
+            disabled={!state.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email)}
+            className="w-full mt-6 btn-premium justify-center disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {t('bookingSummary.confirmCta')}
           </button>
-          
+
           <p className="text-xs text-muted-foreground text-center mt-4">
             {t('bookingSummary.terms')}
           </p>

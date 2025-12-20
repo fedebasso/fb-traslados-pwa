@@ -22,6 +22,7 @@ export interface BookingState {
   pickupTime: string | null;
   distance: number;
   duration: number;
+  email: string;
   confirmationCode?: string;
 }
 

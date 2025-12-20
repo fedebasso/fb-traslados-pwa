@@ -158,6 +158,10 @@ const resources = {
         total: "Total",
         confirmCta: "Confirm Booking",
         terms: "By confirming, you agree to our terms of service",
+        emailLabel: "Email Address",
+        emailPlaceholder: "your@email.com",
+        emailRequired: "Email is required",
+        emailInvalid: "Please enter a valid email address",
       },
       confirmation: {
         title: "Booking Confirmed!",
@@ -325,6 +329,10 @@ const resources = {
         total: "Total",
         confirmCta: "Confirmar reserva",
         terms: "Al confirmar aceptas nuestros términos de servicio",
+        emailLabel: "Correo electrónico",
+        emailPlaceholder: "tu@email.com",
+        emailRequired: "El correo electrónico es obligatorio",
+        emailInvalid: "Por favor ingresa un correo electrónico válido",
       },
       confirmation: {
         title: "¡Reserva confirmada!",
@@ -492,6 +500,10 @@ const resources = {
         total: "Total",
         confirmCta: "Confirmar reserva",
         terms: "Ao confirmar, você concorda com nossos termos de serviço",
+        emailLabel: "Endereço de e-mail",
+        emailPlaceholder: "seu@email.com",
+        emailRequired: "O e-mail é obrigatório",
+        emailInvalid: "Por favor, insira um endereço de e-mail válido",
       },
       confirmation: {
         title: "Reserva confirmada!",
