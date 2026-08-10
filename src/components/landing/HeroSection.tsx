@@ -14,9 +14,9 @@ export const HeroSection = ({ onBookNow }: HeroSectionProps) => {
 
   return (
     <section className="relative flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-background via-background to-card pt-20 safe-px safe-pt safe-pb">
-      {/* Ambient background effects */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_hsl(45_70%_50%_/_0.05),_transparent_50%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_hsl(222_47%_15%_/_0.3),_transparent_60%)]" />
+      {/* Ambient background effects — cálidos */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_hsl(30_46%_60%_/_0.12),_transparent_55%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_hsl(28_42%_52%_/_0.08),_transparent_60%)]" />
       
       {/* Water ripple canvas */}
       <WaterDropEffect />

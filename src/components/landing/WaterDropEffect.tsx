@@ -68,7 +68,7 @@ export const WaterDropEffect = () => {
         // Draw ripple
         ctx.beginPath();
         ctx.arc(ripple.x, ripple.y, ripple.radius, 0, Math.PI * 2);
-        ctx.strokeStyle = `hsla(45, 70%, 50%, ${ripple.opacity * 0.3})`;
+        ctx.strokeStyle = `hsla(28, 42%, 42%, ${ripple.opacity * 0.35})`;
         ctx.lineWidth = 1.5;
         ctx.stroke();
 
@@ -76,7 +76,7 @@ export const WaterDropEffect = () => {
         if (ripple.radius > 20) {
           ctx.beginPath();
           ctx.arc(ripple.x, ripple.y, ripple.radius * 0.6, 0, Math.PI * 2);
-          ctx.strokeStyle = `hsla(45, 60%, 60%, ${ripple.opacity * 0.2})`;
+          ctx.strokeStyle = `hsla(30, 40%, 52%, ${ripple.opacity * 0.25})`;
           ctx.lineWidth = 1;
           ctx.stroke();
         }
@@ -102,8 +102,8 @@ export const WaterDropEffect = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 pointer-events-auto opacity-60"
-      style={{ mixBlendMode: 'screen' }}
+      className="absolute inset-0 pointer-events-auto opacity-70"
+      style={{ mixBlendMode: 'multiply' }}
     />
   );
 };
