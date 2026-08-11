@@ -4,7 +4,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { Check, CalendarPlus, Car, ArrowRight, Sparkles, Home, MessageCircle } from 'lucide-react';
 import { BookingState } from '@/types/booking.types';
 import { vehicles } from './VehicleSelection';
-import { buildBookingMessage, openWhatsApp } from '@/services/whatsapp';
+import { buildBookingMessage, getWhatsAppLink, openWhatsApp } from '@/services/whatsapp';
 import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { getDateLocale } from '@/lib/i18n';
@@ -28,11 +28,14 @@ export const Confirmation = ({ state, onBookAnother, onGoHome }: ConfirmationPro
     return () => clearTimeout(timer);
   }, []);
 
-  const qrData = JSON.stringify({
-    code: state.confirmationCode,
-    vehicle: state.vehicle,
-    date: state.pickupDate?.toISOString(),
-  });
+  // The QR encodes the same WhatsApp link as the button below: scanning it
+  // with a phone opens WhatsApp with the booking request ready to send.
+  // Useful when the customer completed the form on a desktop browser.
+  const whatsAppMessage = buildBookingMessage(
+    state,
+    vehicle ? `${vehicle.name} (${vehicle.model})` : undefined,
+  );
+  const qrData = getWhatsAppLink(whatsAppMessage);
 
   const handleAddToCalendar = () => {
     if (!state.pickupDate || !state.pickupTime) return;
@@ -132,8 +135,8 @@ export const Confirmation = ({ state, onBookAnother, onGoHome }: ConfirmationPro
               <div className="p-4 bg-white rounded-xl">
                 <QRCodeSVG
                   value={qrData}
-                  size={150}
-                  level="H"
+                  size={200}
+                  level="L"
                   includeMargin={false}
                 />
               </div>
@@ -184,14 +187,7 @@ export const Confirmation = ({ state, onBookAnother, onGoHome }: ConfirmationPro
 
           {/* Action buttons */}
           <button
-            onClick={() =>
-              openWhatsApp(
-                buildBookingMessage(
-                  state,
-                  vehicle ? `${vehicle.name} (${vehicle.model})` : undefined,
-                ),
-              )
-            }
+            onClick={() => openWhatsApp(whatsAppMessage)}
             className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#25D366] text-white font-medium hover:brightness-95 transition-all"
           >
             <MessageCircle className="w-5 h-5" />
