@@ -3,6 +3,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { languageOptions } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
+import fbLogo from "@/assets/logo-fb-dark.png";
 
 interface TopNavProps {
   onBookNow?: () => void;
@@ -22,7 +23,13 @@ export const TopNav = ({ onBookNow }: TopNavProps) => {
   return (
     <header className="fixed top-0 left-0 right-0 z-40 border-b border-border/30 bg-background/60 backdrop-blur-xl safe-pt safe-px">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-3" />
+        <a href="#" className="flex items-center" aria-label={t('nav.brand')}>
+          <img
+            src={fbLogo}
+            alt={t('nav.brand')}
+            className="h-11 w-auto object-contain"
+          />
+        </a>
 
         <div className="hidden md:flex items-center gap-6 text-sm">
           {navigationItems.map(item => (

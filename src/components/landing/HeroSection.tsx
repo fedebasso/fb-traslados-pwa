@@ -2,8 +2,7 @@ import { motion } from 'framer-motion';
 import { WaterDropEffect } from './WaterDropEffect';
 import { ChevronRight, Shield, Clock, Star } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import fbLogoMobile from '@/assets/Fb_logo_2_192x192.png';
-import fbLogoDesktop from '@/assets/Fb_logo_2_512x512.png';
+import fbLogo from '@/assets/logo-fb-dark.png';
 
 interface HeroSectionProps {
   onBookNow: () => void;
@@ -30,16 +29,12 @@ export const HeroSection = ({ onBookNow }: HeroSectionProps) => {
           className="space-y-8"
         >
           <div className="flex justify-center" style={{ marginBottom: '5px' }}>
-            <picture className="mx-auto block w-full max-w-xs sm:max-w-sm">
-              <source media="(min-width: 768px)" srcSet={fbLogoDesktop} />
-              <img
-                src={fbLogoMobile}
-                alt={t('nav.brand')}
-                className="h-auto w-full object-contain"
-                loading="lazy"
-                sizes="(min-width: 768px) 400px, 240px"
-              />
-            </picture>
+            <img
+              src={fbLogo}
+              alt={t('nav.brand')}
+              className="mx-auto block h-auto w-full max-w-xs sm:max-w-sm object-contain"
+              loading="eager"
+            />
           </div>
 
           {/* Badge */}
