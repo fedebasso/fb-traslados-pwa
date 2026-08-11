@@ -23,3 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 *.tsbuildinfo
+
+# Vercel CLI local project link / pulled env
+.vercel
