@@ -37,15 +37,18 @@ export const HeroSection = ({ onBookNow }: HeroSectionProps) => {
             />
           </div>
 
-          {/* Badge */}
+          {/* Eyebrow */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium"
+            className="flex items-center justify-center gap-4 text-primary"
           >
-            <Star className="w-4 h-4 fill-primary" />
-            {t('hero.badge')}
+            <span className="h-px w-10 bg-primary/40" />
+            <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.28em] whitespace-nowrap">
+              {t('hero.badge')}
+            </span>
+            <span className="h-px w-10 bg-primary/40" />
           </motion.div>
 
           {/* Main headline */}
@@ -78,26 +81,22 @@ export const HeroSection = ({ onBookNow }: HeroSectionProps) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.8 }}
-            className="pt-12 flex flex-wrap items-center justify-center gap-8 md:gap-12"
+            className="pt-12 flex flex-wrap items-center justify-center gap-x-5 gap-y-3 text-muted-foreground"
           >
-            <div className="flex items-center gap-3 text-muted-foreground">
-              <div className="p-2 rounded-lg bg-primary/10">
-                <Shield className="w-5 h-5 text-primary" />
-              </div>
-              <span className="text-sm">{t('hero.trust.insured')}</span>
-            </div>
-            <div className="flex items-center gap-3 text-muted-foreground">
-              <div className="p-2 rounded-lg bg-primary/10">
-                <Clock className="w-5 h-5 text-primary" />
-              </div>
-              <span className="text-sm">{t('hero.trust.availability')}</span>
-            </div>
-            <div className="flex items-center gap-3 text-muted-foreground">
-              <div className="p-2 rounded-lg bg-primary/10">
-                <Star className="w-5 h-5 text-primary" />
-              </div>
-              <span className="text-sm">{t('hero.trust.rating')}</span>
-            </div>
+            <span className="inline-flex items-center gap-2 text-sm">
+              <Shield className="w-4 h-4 text-primary" />
+              {t('hero.trust.insured')}
+            </span>
+            <span className="hidden sm:inline-block h-4 w-px bg-border" />
+            <span className="inline-flex items-center gap-2 text-sm">
+              <Clock className="w-4 h-4 text-primary" />
+              {t('hero.trust.availability')}
+            </span>
+            <span className="hidden sm:inline-block h-4 w-px bg-border" />
+            <span className="inline-flex items-center gap-2 text-sm">
+              <Star className="w-4 h-4 text-primary" />
+              {t('hero.trust.rating')}
+            </span>
           </motion.div>
         </motion.div>
       </div>

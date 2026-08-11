@@ -62,7 +62,7 @@ export default defineConfig(({ mode }) => {
           scope: "/",
           display: "standalone",
           orientation: "portrait-primary",
-          lang: "en",
+          lang: "es",
           categories: ["travel", "productivity"],
           icons: [
             {

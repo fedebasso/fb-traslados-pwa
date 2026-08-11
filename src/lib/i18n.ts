@@ -513,7 +513,7 @@ const resources = {
 };
 
 const storedLanguage = typeof window !== "undefined" ? localStorage.getItem("language") : null;
-const fallbackLng = "en";
+const fallbackLng = "es";
 
 i18n.use(initReactI18next).init({
   resources,
