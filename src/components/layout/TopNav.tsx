@@ -1,5 +1,5 @@
 import { Car, ArrowRight, Check, Languages, Menu } from "lucide-react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { languageOptions } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
@@ -53,12 +53,15 @@ export const TopNav = ({ onBookNow }: TopNavProps) => {
           <SheetTrigger asChild>
             <button
               className="md:hidden inline-flex items-center justify-center rounded-lg border border-border/60 bg-card/70 p-2 text-foreground shadow-sm touch-target"
-              aria-label={t('nav.menu.home')}
+              aria-label={t('nav.openMenu')}
             >
               <Menu className="w-5 h-5" />
             </button>
           </SheetTrigger>
-          <SheetContent side="right" className="w-80 bg-background/90 backdrop-blur-xl border-border safe-px safe-pb safe-pt">
+          <SheetContent
+            side="right"
+            className="w-[85vw] max-w-sm overflow-y-auto bg-background/95 backdrop-blur-xl border-border safe-pb safe-pt"
+          >
             <SheetHeader className="items-start space-y-1">
               <SheetTitle className="text-left">{t('nav.brand')}</SheetTitle>
               <p className="text-sm text-muted-foreground">{t('nav.tagline')}</p>
@@ -98,22 +101,28 @@ export const TopNav = ({ onBookNow }: TopNavProps) => {
                 </p>
                 <div className="grid gap-2 text-sm text-muted-foreground">
                   {navigationItems.map(item => (
-                    <a
-                      key={`${item}-mobile`}
-                      href="#"
-                      className="flex items-center justify-between rounded-lg border border-border px-4 py-3 hover:border-primary/40 hover:text-foreground transition-colors min-h-[48px]"
-                    >
-                      <span>{t(`nav.menu.${item}`)}</span>
-                      <ArrowRight className="w-4 h-4 text-muted-foreground" />
-                    </a>
+                    <SheetClose asChild key={`${item}-mobile`}>
+                      <a
+                        href="#"
+                        className="flex items-center justify-between rounded-lg border border-border px-4 py-3 hover:border-primary/40 hover:text-foreground transition-colors min-h-12"
+                      >
+                        <span>{t(`nav.menu.${item}`)}</span>
+                        <ArrowRight className="w-4 h-4 text-muted-foreground" />
+                      </a>
+                    </SheetClose>
                   ))}
                 </div>
               </div>
 
-              <button onClick={onBookNow} className="w-full btn-premium justify-center text-base min-h-[48px]">
-                <Car className="w-5 h-5" />
-                <span>{t('nav.book')}</span>
-              </button>
+              <SheetClose asChild>
+                <button
+                  onClick={onBookNow}
+                  className="w-full btn-premium justify-center text-base min-h-12 flex items-center gap-2"
+                >
+                  <Car className="w-5 h-5" />
+                  <span>{t('nav.book')}</span>
+                </button>
+              </SheetClose>
             </div>
           </SheetContent>
         </Sheet>

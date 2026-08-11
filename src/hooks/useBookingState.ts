@@ -3,6 +3,51 @@ import { BookingState, VehicleType, MusicPreference, Location } from '@/types/bo
 
 const STORAGE_KEY = 'premium-shuttle-booking';
 
+// Completion rules per wizard step, shared by live validation (canProceed)
+// and by state restoration, so a stale saved session can never strand the
+// user past a step whose data is missing.
+const isStepComplete = (state: BookingState, step: number): boolean => {
+  switch (step) {
+    case 0:
+      return state.vehicle !== null;
+    case 1: {
+      const age = Number(state.age);
+      return (
+        state.fullName.trim().length >= 2 &&
+        state.age.trim() !== '' &&
+        Number.isFinite(age) &&
+        age >= 1 &&
+        age <= 120
+      );
+    }
+    case 2:
+      return state.passengers > 0;
+    case 3:
+      return (
+        state.origin !== null &&
+        state.destination !== null &&
+        state.stops.every(stop => stop.address.trim().length > 0)
+      );
+    case 4:
+      return state.pickupDate !== null && state.pickupTime !== null;
+    case 5:
+      return true;
+    default:
+      return false;
+  }
+};
+
+// A restored session resumes at its saved step only if every prior step is
+// still complete; otherwise it resumes at the first incomplete step. A saved
+// "confirmed" screen (6) resumes at review (5).
+const clampRestoredStep = (state: BookingState): number => {
+  const target = Math.min(Math.max(state.currentStep, 0), 5);
+  for (let step = 0; step < target; step++) {
+    if (!isStepComplete(state, step)) return step;
+  }
+  return target;
+};
+
 const initialState: BookingState = {
   currentStep: 0,
   vehicle: null,
@@ -37,12 +82,13 @@ export const useBookingState = () => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       const parsed = JSON.parse(saved);
-      return {
+      const restored: BookingState = {
         ...initialState,
         ...parsed,
         pickupDate: parsed.pickupDate ? new Date(parsed.pickupDate) : null,
         drinks: parsed.drinks ? normalizeDrinks(parsed.drinks) : [],
       };
+      return { ...restored, currentStep: clampRestoredStep(restored) };
     }
     return initialState;
   });
@@ -132,36 +178,10 @@ export const useBookingState = () => {
     localStorage.removeItem(STORAGE_KEY);
   }, []);
 
-  const canProceed = useCallback((step: number): boolean => {
-    switch (step) {
-      case 0:
-        return state.vehicle !== null;
-      case 1: {
-        const age = Number(state.age);
-        return (
-          state.fullName.trim().length >= 2 &&
-          state.age.trim() !== '' &&
-          Number.isFinite(age) &&
-          age >= 1 &&
-          age <= 120
-        );
-      }
-      case 2:
-        return state.passengers > 0;
-      case 3:
-        return (
-          state.origin !== null &&
-          state.destination !== null &&
-          state.stops.every(stop => stop.address.trim().length > 0)
-        );
-      case 4:
-        return state.pickupDate !== null && state.pickupTime !== null;
-      case 5:
-        return true;
-      default:
-        return false;
-    }
-  }, [state]);
+  const canProceed = useCallback(
+    (step: number): boolean => isStepComplete(state, step),
+    [state],
+  );
 
   return {
     state,

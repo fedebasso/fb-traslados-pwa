@@ -6,6 +6,7 @@ export interface Location {
   address: string;
   lat?: number;
   lng?: number;
+  placeId?: string;
 }
 
 export interface BookingState {
@@ -37,12 +38,4 @@ export interface Vehicle {
   features: string[];
   image: string;
   eco?: boolean;
-}
-
-export interface PricingBreakdown {
-  baseFare: number;
-  distanceCharge: number;
-  passengerSurcharge: number;
-  amenities: number;
-  total: number;
 }

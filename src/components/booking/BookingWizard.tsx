@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { useBookingState } from '@/hooks/useBookingState';
-import { calculatePricing, generateConfirmationCode } from '@/services/pricingCalculator';
+import { generateConfirmationCode } from '@/services/confirmationCode';
 import { buildBookingMessage, openWhatsApp } from '@/services/whatsapp';
 import { StepIndicator } from './StepIndicator';
 import { VehicleSelection, vehicles } from './VehicleSelection';
@@ -13,7 +13,6 @@ import { DateTimePicker } from './DateTimePicker';
 import { BookingSummary } from './BookingSummary';
 import { Confirmation } from './Confirmation';
 import { useTranslation } from 'react-i18next';
-import { cn } from '@/lib/utils';
 
 interface BookingWizardProps {
   onClose: () => void;
@@ -46,7 +45,6 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
   } = useBookingState();
 
   const [direction, setDirection] = useState(1);
-  const pricing = calculatePricing(state);
   const { t } = useTranslation();
   const stepLabels = [
     t('bookingWizard.steps.vehicle'),
@@ -174,7 +172,6 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
         return (
           <BookingSummary
             state={state}
-            pricing={pricing}
             onEdit={handleGoToStep}
             onConfirm={handleConfirm}
           />
@@ -183,7 +180,6 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
         return (
           <Confirmation
             state={state}
-            pricing={pricing}
             onBookAnother={handleBookAnother}
             onGoHome={onClose}
           />
@@ -198,11 +194,11 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 bg-background"
+      className="fixed inset-0 z-50 bg-background flex flex-col"
     >
       {/* Header */}
       {state.currentStep < 6 && (
-        <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-xl border-b border-border safe-px safe-pt">
+        <div className="flex-shrink-0 z-10 bg-background/80 backdrop-blur-xl border-b border-border safe-px safe-pt">
           <div className="container mx-auto px-5 py-4">
             <div className="flex items-center justify-between mb-4">
               <button
@@ -227,17 +223,10 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
 
       {/* Content */}
       <div
-        className={`${
-          state.currentStep < 6 ? 'h-[calc(100dvh-180px)]' : 'h-[100dvh]'
-        } overflow-y-auto`}
+        className="flex-1 min-h-0 overflow-y-auto"
         style={{ WebkitOverflowScrolling: 'touch' }}
       >
-        <div
-          className={cn(
-            'container mx-auto px-5 py-8',
-            state.currentStep < 5 ? 'pb-32' : 'pb-8',
-          )}
-        >
+        <div className="container mx-auto px-5 py-8">
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={state.currentStep}
@@ -256,32 +245,30 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
 
       {/* Footer navigation */}
       {state.currentStep < 5 && (
-        <div className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-xl border-t border-border safe-px safe-pb shadow-[0_-6px_24px_hsl(30_25%_30%_/_0.08)]">
-          <div className="container mx-auto px-5 py-4">
-            <div className="flex items-center justify-between">
+        <div className="flex-shrink-0 bg-card/95 backdrop-blur-xl border-t border-border safe-px safe-pb shadow-[0_-6px_24px_hsl(30_25%_30%_/_0.08)]">
+          <div className="container mx-auto px-5 py-3">
+            <div className="flex items-center justify-between gap-2">
               <button
                 onClick={handlePrev}
                 disabled={state.currentStep === 0}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors disabled:opacity-0"
+                className="flex items-center gap-1.5 px-3 py-3 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors disabled:opacity-0 min-h-12"
               >
                 <ChevronLeft className="w-5 h-5" />
-                {t('bookingWizard.actions.back')}
+                <span className="hidden sm:inline">{t('bookingWizard.actions.back')}</span>
               </button>
 
-              {/* Price preview */}
-              {state.vehicle && (
-                <div className="text-center">
-                  <p className="text-xs text-muted-foreground">{t('bookingWizard.actions.estimated')}</p>
-                  <p className="text-lg font-display font-bold text-gradient-gold">
-                    ${pricing.total.toFixed(2)}
-                  </p>
-                </div>
-              )}
+              {/* Step progress */}
+              <p className="text-xs text-muted-foreground text-center">
+                {t('bookingWizard.stepOf', {
+                  current: state.currentStep + 1,
+                  total: 6,
+                })}
+              </p>
 
               <button
                 onClick={handleNext}
                 disabled={!canProceed(state.currentStep)}
-                className="flex items-center gap-2 btn-premium disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center gap-1.5 btn-premium px-5 py-3 min-h-12 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {t('bookingWizard.actions.continue')}
                 <ChevronRight className="w-5 h-5" />

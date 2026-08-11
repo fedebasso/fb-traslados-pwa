@@ -32,7 +32,7 @@ export const StepIndicator = ({ currentStep, totalSteps, stepLabels }: StepIndic
             <div key={index} className="flex flex-col items-center gap-2">
               <motion.div
                 className={`
-                  relative w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium
+                  relative w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs font-medium
                   transition-all duration-300
                   ${isCompleted ? 'bg-primary text-primary-foreground' : ''}
                   ${isActive ? 'bg-primary/20 border-2 border-primary text-primary' : ''}
@@ -57,6 +57,11 @@ export const StepIndicator = ({ currentStep, totalSteps, stepLabels }: StepIndic
           );
         })}
       </div>
+
+      {/* Active step label (labels above are hidden on mobile) */}
+      <p className="md:hidden text-center text-xs font-medium text-primary mt-3">
+        {stepLabels[currentStep]}
+      </p>
     </div>
   );
 };

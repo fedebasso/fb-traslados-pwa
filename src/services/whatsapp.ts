@@ -49,8 +49,10 @@ export const buildBookingMessage = (state: BookingState, vehicleName?: string): 
   return lines.join('\n');
 };
 
+// api.whatsapp.com directly instead of wa.me: the wa.me redirect re-encodes
+// the text parameter and corrupts 4-byte characters (emoji become U+FFFD).
 export const getWhatsAppLink = (message: string): string =>
-  `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`;
+  `https://api.whatsapp.com/send?phone=${WHATSAPP_PHONE}&text=${encodeURIComponent(message)}`;
 
 export const openWhatsApp = (message: string): void => {
   window.open(getWhatsAppLink(message), '_blank', 'noopener,noreferrer');

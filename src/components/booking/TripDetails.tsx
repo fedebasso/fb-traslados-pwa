@@ -76,8 +76,9 @@ export const TripDetails = ({
               <div className="flex items-center gap-4">
                 <button
                   onClick={() => onPassengersChange(Math.max(1, passengers - 1))}
-                  className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center text-foreground hover:bg-muted/80 transition-colors disabled:opacity-50"
+                  className="w-11 h-11 rounded-lg bg-muted flex items-center justify-center text-foreground hover:bg-muted/80 transition-colors disabled:opacity-50"
                   disabled={passengers <= 1}
+                  aria-label="-"
                 >
                   <Minus className="w-4 h-4" />
                 </button>
@@ -86,8 +87,9 @@ export const TripDetails = ({
                 </span>
                 <button
                   onClick={() => onPassengersChange(Math.min(maxPassengers, passengers + 1))}
-                  className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center text-foreground hover:bg-muted/80 transition-colors disabled:opacity-50"
+                  className="w-11 h-11 rounded-lg bg-muted flex items-center justify-center text-foreground hover:bg-muted/80 transition-colors disabled:opacity-50"
                   disabled={passengers >= maxPassengers}
+                  aria-label="+"
                 >
                   <Plus className="w-4 h-4" />
                 </button>
@@ -106,8 +108,9 @@ export const TripDetails = ({
               <div className="flex items-center gap-4">
                 <button
                   onClick={() => onLuggageChange(Math.max(0, luggage - 1))}
-                  className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center text-foreground hover:bg-muted/80 transition-colors disabled:opacity-50"
+                  className="w-11 h-11 rounded-lg bg-muted flex items-center justify-center text-foreground hover:bg-muted/80 transition-colors disabled:opacity-50"
                   disabled={luggage <= 0}
+                  aria-label="-"
                 >
                   <Minus className="w-4 h-4" />
                 </button>
@@ -116,8 +119,9 @@ export const TripDetails = ({
                 </span>
                 <button
                   onClick={() => onLuggageChange(Math.min(maxLuggage, luggage + 1))}
-                  className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center text-foreground hover:bg-muted/80 transition-colors disabled:opacity-50"
+                  className="w-11 h-11 rounded-lg bg-muted flex items-center justify-center text-foreground hover:bg-muted/80 transition-colors disabled:opacity-50"
                   disabled={luggage >= maxLuggage}
+                  aria-label="+"
                 >
                   <Plus className="w-4 h-4" />
                 </button>

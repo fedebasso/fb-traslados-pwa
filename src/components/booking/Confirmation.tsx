@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
 import { Check, CalendarPlus, Car, ArrowRight, Sparkles, Home, MessageCircle } from 'lucide-react';
-import { BookingState, PricingBreakdown } from '@/types/booking.types';
+import { BookingState } from '@/types/booking.types';
 import { vehicles } from './VehicleSelection';
 import { buildBookingMessage, openWhatsApp } from '@/services/whatsapp';
 import { format } from 'date-fns';
@@ -11,7 +11,6 @@ import { getDateLocale } from '@/lib/i18n';
 
 interface ConfirmationProps {
   state: BookingState;
-  pricing: PricingBreakdown;
   onBookAnother: () => void;
   onGoHome: () => void;
 }
