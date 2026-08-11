@@ -21,7 +21,7 @@ export const HeroSection = ({ onBookNow }: HeroSectionProps) => {
       <WaterDropEffect />
       
       {/* Content */}
-      <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center px-4 py-16 text-center sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center px-5 py-16 text-center sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}

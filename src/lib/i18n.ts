@@ -24,9 +24,9 @@ const resources = {
         language: "Language",
       },
       hero: {
-        badge: "Airport · Corporate · Events",
+        badge: "Airport · Events · Business",
         title: {
-          lead: "Private & corporate transfers in",
+          lead: "Premium transfers in",
           highlight: "Montevideo",
         },
         subtitle:
@@ -191,9 +191,9 @@ const resources = {
         language: "Idioma",
       },
       hero: {
-        badge: "Aeropuerto · Corporativo · Eventos",
+        badge: "Aeropuerto · Eventos · Empresas",
         title: {
-          lead: "Traslados privados y corporativos en",
+          lead: "Traslados premium en",
           highlight: "Montevideo",
         },
         subtitle:
@@ -358,9 +358,9 @@ const resources = {
         language: "Idioma",
       },
       hero: {
-        badge: "Aeroporto · Corporativo · Eventos",
+        badge: "Aeroporto · Eventos · Empresas",
         title: {
-          lead: "Traslados privados e corporativos em",
+          lead: "Traslados premium em",
           highlight: "Montevidéu",
         },
         subtitle:

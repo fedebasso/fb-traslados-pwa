@@ -181,8 +181,8 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
     >
       {/* Header */}
       {state.currentStep < 5 && (
-        <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-xl border-b border-border safe-px">
-          <div className="container mx-auto px-4 py-4">
+        <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-xl border-b border-border safe-px safe-pt">
+          <div className="container mx-auto px-5 py-4">
             <div className="flex items-center justify-between mb-4">
               <button
                 onClick={onClose}
@@ -213,7 +213,7 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
       >
         <div
           className={cn(
-            'container mx-auto px-4 py-8',
+            'container mx-auto px-5 py-8',
             state.currentStep < 4 ? 'pb-32' : 'pb-8',
           )}
         >
@@ -235,8 +235,8 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
 
       {/* Footer navigation */}
       {state.currentStep < 4 && (
-        <div className="fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-xl border-t border-border safe-px safe-pb">
-          <div className="container mx-auto px-4 py-4">
+        <div className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-xl border-t border-border safe-px safe-pb shadow-[0_-6px_24px_hsl(30_25%_30%_/_0.08)]">
+          <div className="container mx-auto px-5 py-4">
             <div className="flex items-center justify-between">
               <button
                 onClick={handlePrev}
