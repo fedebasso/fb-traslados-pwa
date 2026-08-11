@@ -24,14 +24,14 @@ const resources = {
         language: "Language",
       },
       hero: {
-        badge: "Premium Shuttle Service",
+        badge: "Airport · Corporate · Events",
         title: {
-          lead: "Travel in",
-          highlight: "Elegance",
+          lead: "Private & corporate transfers in",
+          highlight: "Montevideo",
         },
         subtitle:
-          "Experience the pinnacle of comfort with our premium shuttle service. Luxury vehicles, professional chauffeurs, and seamless journeys await.",
-        cta: "Book Your Premium Ride",
+          "Professional chauffeurs, spotless cars and guaranteed punctuality. Book your transfer to the airport, your event or your company.",
+        cta: "Book your transfer",
         trust: {
           insured: "Insured & Licensed",
           availability: "24/7 Availability",
@@ -191,14 +191,14 @@ const resources = {
         language: "Idioma",
       },
       hero: {
-        badge: "Servicio de traslado premium",
+        badge: "Aeropuerto · Corporativo · Eventos",
         title: {
-          lead: "Viaja con",
-          highlight: "Elegancia",
+          lead: "Traslados privados y corporativos en",
+          highlight: "Montevideo",
         },
         subtitle:
-          "Experimenta el pináculo del confort con nuestro servicio de traslado premium. Vehículos de lujo, choferes profesionales y trayectos sin fricciones.",
-        cta: "Reserva tu viaje premium",
+          "Choferes profesionales, autos impecables y puntualidad garantizada. Reservá tu traslado al aeropuerto, a tu evento o para tu empresa.",
+        cta: "Reservá tu traslado",
         trust: {
           insured: "Asegurado y habilitado",
           availability: "Disponibilidad 24/7",
@@ -358,14 +358,14 @@ const resources = {
         language: "Idioma",
       },
       hero: {
-        badge: "Serviço de traslado premium",
+        badge: "Aeroporto · Corporativo · Eventos",
         title: {
-          lead: "Viaje com",
-          highlight: "Elegância",
+          lead: "Traslados privados e corporativos em",
+          highlight: "Montevidéu",
         },
         subtitle:
-          "Experimente o auge do conforto com nosso serviço premium. Veículos de luxo, motoristas profissionais e trajetos sem fricção.",
-        cta: "Reserve sua viagem premium",
+          "Motoristas profissionais, carros impecáveis e pontualidade garantida. Reserve seu traslado ao aeroporto, ao seu evento ou para sua empresa.",
+        cta: "Reserve seu traslado",
         trust: {
           insured: "Segurado e licenciado",
           availability: "Disponível 24/7",
