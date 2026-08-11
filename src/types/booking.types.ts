@@ -11,6 +11,9 @@ export interface Location {
 export interface BookingState {
   currentStep: number;
   vehicle: VehicleType;
+  fullName: string;
+  age: string;
+  stops: Location[];
   passengers: number;
   luggage: number;
   music: MusicPreference | null;

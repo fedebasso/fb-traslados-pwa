@@ -6,6 +6,9 @@ const STORAGE_KEY = 'premium-shuttle-booking';
 const initialState: BookingState = {
   currentStep: 0,
   vehicle: null,
+  fullName: '',
+  age: '',
+  stops: [],
   passengers: 1,
   luggage: 0,
   music: null,
@@ -35,6 +38,7 @@ export const useBookingState = () => {
     if (saved) {
       const parsed = JSON.parse(saved);
       return {
+        ...initialState,
         ...parsed,
         pickupDate: parsed.pickupDate ? new Date(parsed.pickupDate) : null,
         drinks: parsed.drinks ? normalizeDrinks(parsed.drinks) : [],
@@ -49,6 +53,18 @@ export const useBookingState = () => {
 
   const setVehicle = useCallback((vehicle: VehicleType) => {
     setState(prev => ({ ...prev, vehicle }));
+  }, []);
+
+  const setFullName = useCallback((fullName: string) => {
+    setState(prev => ({ ...prev, fullName }));
+  }, []);
+
+  const setAge = useCallback((age: string) => {
+    setState(prev => ({ ...prev, age }));
+  }, []);
+
+  const setStops = useCallback((stops: Location[]) => {
+    setState(prev => ({ ...prev, stops }));
   }, []);
 
   const setPassengers = useCallback((passengers: number) => {
@@ -96,7 +112,7 @@ export const useBookingState = () => {
   }, []);
 
   const nextStep = useCallback(() => {
-    setState(prev => ({ ...prev, currentStep: Math.min(prev.currentStep + 1, 5) }));
+    setState(prev => ({ ...prev, currentStep: Math.min(prev.currentStep + 1, 6) }));
   }, []);
 
   const prevStep = useCallback(() => {
@@ -104,7 +120,7 @@ export const useBookingState = () => {
   }, []);
 
   const goToStep = useCallback((step: number) => {
-    setState(prev => ({ ...prev, currentStep: Math.max(0, Math.min(step, 5)) }));
+    setState(prev => ({ ...prev, currentStep: Math.max(0, Math.min(step, 6)) }));
   }, []);
 
   const setConfirmationCode = useCallback((code: string) => {
@@ -120,13 +136,27 @@ export const useBookingState = () => {
     switch (step) {
       case 0:
         return state.vehicle !== null;
-      case 1:
-        return state.passengers > 0;
+      case 1: {
+        const age = Number(state.age);
+        return (
+          state.fullName.trim().length >= 2 &&
+          state.age.trim() !== '' &&
+          Number.isFinite(age) &&
+          age >= 1 &&
+          age <= 120
+        );
+      }
       case 2:
-        return state.origin !== null && state.destination !== null;
+        return state.passengers > 0;
       case 3:
-        return state.pickupDate !== null && state.pickupTime !== null;
+        return (
+          state.origin !== null &&
+          state.destination !== null &&
+          state.stops.every(stop => stop.address.trim().length > 0)
+        );
       case 4:
+        return state.pickupDate !== null && state.pickupTime !== null;
+      case 5:
         return true;
       default:
         return false;
@@ -136,6 +166,9 @@ export const useBookingState = () => {
   return {
     state,
     setVehicle,
+    setFullName,
+    setAge,
+    setStops,
     setPassengers,
     setLuggage,
     setMusic,

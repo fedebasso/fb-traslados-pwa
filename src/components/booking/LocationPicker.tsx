@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Navigation, ArrowRight, Search } from 'lucide-react';
+import { MapPin, Navigation, ArrowRight, Search, Plus, Trash2 } from 'lucide-react';
 import { Location } from '@/types/booking.types';
 import { useTranslation } from 'react-i18next';
 
@@ -11,6 +11,8 @@ interface LocationPickerProps {
   onDestinationChange: (location: Location | null) => void;
   onDistanceChange: (distance: number) => void;
   onDurationChange: (duration: number) => void;
+  stops: Location[];
+  onStopsChange: (stops: Location[]) => void;
 }
 
 // Simulated locations for demo
@@ -29,6 +31,8 @@ export const LocationPicker = ({
   onDestinationChange,
   onDistanceChange,
   onDurationChange,
+  stops,
+  onStopsChange,
 }: LocationPickerProps) => {
   const { t } = useTranslation();
   const [originSearch, setOriginSearch] = useState(origin?.address || '');
@@ -116,7 +120,7 @@ export const LocationPicker = ({
                   onChange={(e) => {
                     setOriginSearch(e.target.value);
                     setShowOriginSuggestions(true);
-                    if (!e.target.value) onOriginChange(null);
+                    onOriginChange(e.target.value.trim() ? { address: e.target.value.trim() } : null);
                   }}
                   onFocus={() => setShowOriginSuggestions(true)}
                   onBlur={() => setTimeout(() => setShowOriginSuggestions(false), 200)}
@@ -152,7 +156,7 @@ export const LocationPicker = ({
                   onChange={(e) => {
                     setDestinationSearch(e.target.value);
                     setShowDestinationSuggestions(true);
-                    if (!e.target.value) onDestinationChange(null);
+                    onDestinationChange(e.target.value.trim() ? { address: e.target.value.trim() } : null);
                   }}
                   onFocus={() => setShowDestinationSuggestions(true)}
                   onBlur={() => setTimeout(() => setShowDestinationSuggestions(false), 200)}
@@ -215,6 +219,51 @@ export const LocationPicker = ({
             </div>
           </motion.div>
         )}
+
+        {/* Extra stops / extra pickups along the way */}
+        <div className="pt-4 border-t border-border/50 space-y-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-foreground">{t('locationPicker.stopsTitle')}</p>
+              <p className="text-xs text-muted-foreground">{t('locationPicker.stopsSubtitle')}</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => onStopsChange([...stops, { address: '' }])}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-muted text-sm text-foreground hover:bg-muted/80 transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+              {t('locationPicker.addStop')}
+            </button>
+          </div>
+
+          {stops.map((stop, i) => (
+            <div key={i} className="flex items-center gap-2">
+              <div className="relative flex-1">
+                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-primary" />
+                <input
+                  type="text"
+                  value={stop.address}
+                  onChange={(e) => {
+                    const next = [...stops];
+                    next[i] = { address: e.target.value };
+                    onStopsChange(next);
+                  }}
+                  placeholder={t('locationPicker.stopPlaceholder', { index: i + 1 })}
+                  className="input-premium w-full pl-11"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => onStopsChange(stops.filter((_, idx) => idx !== i))}
+                className="p-2.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-muted transition-colors"
+                aria-label={t('locationPicker.removeStop')}
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
+          ))}
+        </div>
 
         {/* Popular locations */}
         <div className="pt-4 border-t border-border/50">

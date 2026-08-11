@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
-import { Check, CalendarPlus, Car, ArrowRight, Sparkles, Home } from 'lucide-react';
+import { Check, CalendarPlus, Car, ArrowRight, Sparkles, Home, MessageCircle } from 'lucide-react';
 import { BookingState, PricingBreakdown } from '@/types/booking.types';
 import { vehicles } from './VehicleSelection';
-import { formatCurrency } from '@/services/pricingCalculator';
+import { buildBookingMessage, openWhatsApp } from '@/services/whatsapp';
 import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { getDateLocale } from '@/lib/i18n';
@@ -16,7 +16,7 @@ interface ConfirmationProps {
   onGoHome: () => void;
 }
 
-export const Confirmation = ({ state, pricing, onBookAnother, onGoHome }: ConfirmationProps) => {
+export const Confirmation = ({ state, onBookAnother, onGoHome }: ConfirmationProps) => {
   const [showContent, setShowContent] = useState(false);
   const vehicle = vehicles.find(v => v.id === state.vehicle);
   const { t, i18n } = useTranslation();
@@ -154,8 +154,8 @@ export const Confirmation = ({ state, pricing, onBookAnother, onGoHome }: Confir
                   <p className="text-sm text-muted-foreground">{vehicleModel}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-xl font-display font-bold text-gradient-gold">
-                    {formatCurrency(pricing.total)}
+                  <p className="text-sm font-medium text-gradient-gold max-w-[120px]">
+                    {t('confirmation.pricePending')}
                   </p>
                 </div>
               </div>
@@ -184,6 +184,21 @@ export const Confirmation = ({ state, pricing, onBookAnother, onGoHome }: Confir
           </div>
 
           {/* Action buttons */}
+          <button
+            onClick={() =>
+              openWhatsApp(
+                buildBookingMessage(
+                  state,
+                  vehicle ? `${vehicle.name} (${vehicle.model})` : undefined,
+                ),
+              )
+            }
+            className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#25D366] text-white font-medium hover:brightness-95 transition-all"
+          >
+            <MessageCircle className="w-5 h-5" />
+            {t('confirmation.resendWhatsApp')}
+          </button>
+
           <div className="flex flex-col sm:flex-row gap-3">
             <button
               onClick={handleAddToCalendar}

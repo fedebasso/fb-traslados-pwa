@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Car, Users, Briefcase, Music, Coffee, GlassWater, MapPin, Navigation, Calendar, Clock, Edit2 } from 'lucide-react';
+import { Car, Users, Briefcase, Music, Coffee, GlassWater, MapPin, Calendar, Clock, Edit2, User, MessageCircle } from 'lucide-react';
 import { BookingState, PricingBreakdown } from '@/types/booking.types';
 import { vehicles } from './VehicleSelection';
 import { formatCurrency } from '@/services/pricingCalculator';
@@ -63,6 +63,30 @@ export const BookingSummary = ({ state, pricing, onEdit, onConfirm }: BookingSum
             </div>
           </motion.div>
 
+          {/* Contact */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.03 }}
+            className="glass-card p-5"
+          >
+            <div className="flex items-start justify-between">
+              <div>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
+                  <User className="w-4 h-4" />
+                  {t('bookingSummary.contact')}
+                </div>
+                <p className="text-lg font-semibold text-foreground">{state.fullName}</p>
+                <p className="text-sm text-muted-foreground">
+                  {t('bookingSummary.ageValue', { age: state.age })}
+                </p>
+              </div>
+              <button onClick={() => onEdit(1)} className="p-2 rounded-lg hover:bg-muted transition-colors">
+                <Edit2 className="w-4 h-4 text-muted-foreground" />
+              </button>
+            </div>
+          </motion.div>
+
           {/* Trip details */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -75,7 +99,7 @@ export const BookingSummary = ({ state, pricing, onEdit, onConfirm }: BookingSum
                 <Users className="w-4 h-4" />
                 {t('bookingSummary.tripDetails')}
               </div>
-              <button onClick={() => onEdit(1)} className="p-2 rounded-lg hover:bg-muted transition-colors">
+              <button onClick={() => onEdit(2)} className="p-2 rounded-lg hover:bg-muted transition-colors">
                 <Edit2 className="w-4 h-4 text-muted-foreground" />
               </button>
             </div>
@@ -137,11 +161,11 @@ export const BookingSummary = ({ state, pricing, onEdit, onConfirm }: BookingSum
                 <MapPin className="w-4 h-4" />
                 {t('bookingSummary.route')}
               </div>
-              <button onClick={() => onEdit(2)} className="p-2 rounded-lg hover:bg-muted transition-colors">
+              <button onClick={() => onEdit(3)} className="p-2 rounded-lg hover:bg-muted transition-colors">
                 <Edit2 className="w-4 h-4 text-muted-foreground" />
               </button>
             </div>
-            
+
             <div className="space-y-3">
               <div className="flex items-start gap-3">
                 <div className="w-6 flex flex-col items-center">
@@ -153,6 +177,19 @@ export const BookingSummary = ({ state, pricing, onEdit, onConfirm }: BookingSum
                   <p className="text-foreground font-medium">{state.origin?.address}</p>
                 </div>
               </div>
+              {state.stops.map((stop, i) => (
+                <div key={i} className="flex items-start gap-3">
+                  <div className="w-6 flex justify-center">
+                    <div className="w-2 h-2 rounded-full bg-amber-500" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs text-muted-foreground">
+                      {t('bookingSummary.stop', { index: i + 1 })}
+                    </p>
+                    <p className="text-foreground font-medium">{stop.address}</p>
+                  </div>
+                </div>
+              ))}
               <div className="flex items-start gap-3">
                 <div className="w-6 flex justify-center">
                   <div className="w-2.5 h-2.5 rounded-full bg-primary" />
@@ -198,7 +235,7 @@ export const BookingSummary = ({ state, pricing, onEdit, onConfirm }: BookingSum
                   </div>
                 </div>
               </div>
-              <button onClick={() => onEdit(3)} className="p-2 rounded-lg hover:bg-muted transition-colors">
+              <button onClick={() => onEdit(4)} className="p-2 rounded-lg hover:bg-muted transition-colors">
                 <Edit2 className="w-4 h-4 text-muted-foreground" />
               </button>
             </div>
@@ -247,16 +284,20 @@ export const BookingSummary = ({ state, pricing, onEdit, onConfirm }: BookingSum
                   {formatCurrency(pricing.total)}
                 </span>
               </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                {t('bookingSummary.priceNote')}
+              </p>
             </div>
           </div>
 
           <button
             onClick={onConfirm}
-            className="w-full mt-6 btn-premium justify-center"
+            className="w-full mt-6 btn-premium justify-center gap-2"
           >
+            <MessageCircle className="w-5 h-5" />
             {t('bookingSummary.confirmCta')}
           </button>
-          
+
           <p className="text-xs text-muted-foreground text-center mt-4">
             {t('bookingSummary.terms')}
           </p>
