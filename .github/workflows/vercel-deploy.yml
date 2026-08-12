@@ -1,9 +1,12 @@
 # CI + Vercel deployment.
 #
-# Pull requests   -> quality gates + Preview deployment (skipped for forks:
-#                    fork PRs have no access to the Vercel secrets).
-# Push to main    -> quality gates + Production deployment.
-# Manual dispatch -> same behavior as the branch it is run from.
+# Pull requests   -> quality gates only (lint/typecheck). No auto-deploy.
+# Push to main    -> quality gates only. No auto-deploy.
+# Manual dispatch -> deploy (production from main, preview otherwise).
+#
+# Auto-deploy on push/PR is intentionally DISABLED to avoid burning the
+# Vercel Hobby daily deployment quota. Deploys run only when triggered
+# manually from the Actions tab ("Run workflow").
 #
 # Required repository secrets (Settings > Secrets and variables > Actions):
 #   VERCEL_TOKEN      Vercel personal token of the account that owns the project
@@ -62,10 +65,11 @@ jobs:
   deploy-preview:
     name: Deploy preview
     needs: quality
-    # Same-repo pull requests only: fork PRs cannot read the Vercel secrets.
+    # Manual dispatch only, from a non-main branch. Auto-deploy on PRs is
+    # disabled to preserve the Vercel deploy quota.
     if: >-
-      github.event_name == 'pull_request' &&
-      github.event.pull_request.head.repo.full_name == github.repository
+      github.event_name == 'workflow_dispatch' &&
+      github.ref != 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     environment:
@@ -111,10 +115,11 @@ jobs:
   deploy-production:
     name: Deploy production
     needs: quality
-    # Production only ever from main.
+    # Production only from main, and only on manual dispatch (no auto-deploy
+    # on push, to preserve the Vercel deploy quota).
     if: >-
       github.ref == 'refs/heads/main' &&
-      (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+      github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     environment:
