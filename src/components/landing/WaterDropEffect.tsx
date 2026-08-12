@@ -102,7 +102,7 @@ export const WaterDropEffect = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 pointer-events-auto opacity-70"
+      className="absolute inset-0 pointer-events-auto opacity-40"
       style={{ mixBlendMode: 'multiply' }}
     />
   );

@@ -12,7 +12,7 @@ export const HeroSection = ({ onBookNow }: HeroSectionProps) => {
   const { t } = useTranslation();
 
   return (
-    <section className="relative flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-background via-background to-card pt-20 safe-px safe-pt safe-pb">
+    <section className="relative flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-background via-background to-card pt-16 sm:pt-20 safe-px safe-pt safe-pb">
       {/* Ambient background effects — cálidos */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_hsl(30_46%_60%_/_0.12),_transparent_55%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_hsl(28_42%_52%_/_0.08),_transparent_60%)]" />
@@ -21,18 +21,18 @@ export const HeroSection = ({ onBookNow }: HeroSectionProps) => {
       <WaterDropEffect />
       
       {/* Content */}
-      <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center px-5 py-16 text-center sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center px-6 py-10 text-center sm:px-8 sm:py-16 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
-          className="space-y-8"
+          className="space-y-5 sm:space-y-8"
         >
-          <div className="flex justify-center" style={{ marginBottom: '5px' }}>
+          <div className="flex justify-center">
             <img
               src={fbLogo}
               alt={t('nav.brand')}
-              className="mx-auto block h-auto w-full max-w-xs sm:max-w-sm object-contain"
+              className="mx-auto block h-auto w-full max-w-[15rem] sm:max-w-xs object-contain"
               loading="eager"
             />
           </div>
@@ -59,7 +59,7 @@ export const HeroSection = ({ onBookNow }: HeroSectionProps) => {
           </h1>
 
           {/* Subtitle */}
-          <p className="mx-auto max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+          <p className="mx-auto max-w-2xl px-2 text-base leading-relaxed text-muted-foreground sm:px-0 sm:text-lg">
             {t('hero.subtitle')}
           </p>
 
@@ -81,7 +81,7 @@ export const HeroSection = ({ onBookNow }: HeroSectionProps) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.8 }}
-            className="pt-12 flex flex-wrap items-center justify-center gap-x-5 gap-y-3 text-muted-foreground"
+            className="pt-6 sm:pt-12 flex flex-wrap items-center justify-center gap-x-5 gap-y-3 text-muted-foreground"
           >
             <span className="inline-flex items-center gap-2 text-sm">
               <Shield className="w-4 h-4 text-primary" />
