@@ -17,7 +17,7 @@
     --popover-foreground: 28 22% 18%;
 
     /* Caramelo / marrón claro para CTAs */
-    --primary: 28 42% 52%;
+    --primary: 28 42% 41%;
     --primary-foreground: 42 45% 99%;
 
     /* Secundario arena */
@@ -25,7 +25,7 @@
     --secondary-foreground: 28 25% 28%;
 
     --muted: 38 28% 93%;
-    --muted-foreground: 30 12% 45%;
+    --muted-foreground: 30 12% 42%;
 
     --accent: 30 40% 62%;
     --accent-foreground: 28 25% 20%;
@@ -41,7 +41,7 @@
 
     /* Tokens de marca (marrón claro reemplaza al dorado) */
     --gold: 28 42% 52%;
-    --gold-light: 30 46% 66%;
+    --gold-light: 30 46% 51%;
     --gold-dark: 26 44% 40%;
     --slate-deep: 40 30% 94%;
     --cream: 40 40% 96%;
@@ -120,7 +120,7 @@
   
   .btn-premium:hover {
     @apply scale-[1.02];
-    box-shadow: 0 6px 40px hsl(45 70% 50% / 0.25);
+    box-shadow: 0 6px 40px hsl(28 42% 52% / 0.25);
   }
 
   .btn-premium::after {
@@ -292,9 +292,9 @@
 
 @keyframes pulse-gold {
   0%, 100% {
-    box-shadow: 0 0 0 0 hsl(45 70% 50% / 0.4);
+    box-shadow: 0 0 0 0 hsl(28 42% 52% / 0.4);
   }
   50% {
-    box-shadow: 0 0 0 15px hsl(45 70% 50% / 0);
+    box-shadow: 0 0 0 15px hsl(28 42% 52% / 0);
   }
 }
