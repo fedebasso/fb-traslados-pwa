@@ -192,9 +192,9 @@ const resources = {
         goHome: "Go to home",
         footer:
           "We will reply on WhatsApp with the total cost of your trip.\nThank you for choosing FB Traslados!",
-        calendarTitle: "Premium Shuttle - {{vehicle}}",
+        calendarTitle: "Premium Shuttle",
         calendarDescription:
-          "Confirmation: {{code}}\nVehicle: {{vehicle}}\nFrom: {{origin}}\nTo: {{destination}}",
+          "Confirmation: {{code}}\nFrom: {{origin}}\nTo: {{destination}}",
       },
     },
   },
@@ -381,9 +381,9 @@ const resources = {
         goHome: "Volver al inicio",
         footer:
           "Te responderemos por WhatsApp con el costo total de tu viaje.\n¡Gracias por elegir FB Traslados!",
-        calendarTitle: "Traslado premium - {{vehicle}}",
+        calendarTitle: "Traslado premium",
         calendarDescription:
-          "Confirmación: {{code}}\nVehículo: {{vehicle}}\nDesde: {{origin}}\nHasta: {{destination}}",
+          "Confirmación: {{code}}\nDesde: {{origin}}\nHasta: {{destination}}",
       },
     },
   },
@@ -570,9 +570,9 @@ const resources = {
         goHome: "Voltar para o início",
         footer:
           "Responderemos pelo WhatsApp com o custo total da sua viagem.\nObrigado por escolher a FB Traslados!",
-        calendarTitle: "Traslado premium - {{vehicle}}",
+        calendarTitle: "Traslado premium",
         calendarDescription:
-          "Confirmação: {{code}}\nVeículo: {{vehicle}}\nDe: {{origin}}\nPara: {{destination}}",
+          "Confirmação: {{code}}\nDe: {{origin}}\nPara: {{destination}}",
       },
     },
   },

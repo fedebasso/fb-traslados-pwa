@@ -42,7 +42,9 @@ export const buildBookingMessage = (state: BookingState, vehicleName?: string): 
   };
   const drinks = state.drinks.map(d => drinkLabels[d] ?? d).join(', ');
   lines.push(`🥤 *Bebidas:* ${state.drinks.length > 0 ? `Sí (${drinks})` : 'No'}`);
-  if (vehicleName) lines.push(`🚘 *Vehículo:* ${vehicleName}`);
+  // With vehicle selection disabled the operator assigns the car; keep an
+  // explicit line so it's never ambiguous.
+  lines.push(`🚘 *Vehículo:* ${vehicleName ?? 'A asignar por FB Traslados'}`);
   lines.push('');
   lines.push('_Espero la cotización del viaje. ¡Gracias!_');
 

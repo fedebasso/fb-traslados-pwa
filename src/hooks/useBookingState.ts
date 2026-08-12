@@ -1,16 +1,33 @@
 import { useState, useEffect, useCallback } from 'react';
 import { BookingState, VehicleType, MusicPreference, Location } from '@/types/booking.types';
 
-const STORAGE_KEY = 'premium-shuttle-booking';
+// Bumped when the step order changes: a v1 session stored step numbers under
+// the old order, so reusing it could strand the user on the wrong screen.
+// Changing the key discards those stale sessions cleanly.
+const STORAGE_KEY = 'premium-shuttle-booking-v2';
+
+// Single source of truth for the wizard flow. Order, total, labels and every
+// numeric index are derived from this array — re-enabling a step is one line.
+// To bring back vehicle selection: add 'vehicle' back at the front.
+export type StepId = 'vehicle' | 'contact' | 'details' | 'location' | 'schedule' | 'review';
+
+export const STEPS: StepId[] = ['contact', 'details', 'location', 'schedule', 'review'];
+
+// The terminal "confirmed" screen sits right after the last navigable step.
+export const CONFIRMED_STEP = STEPS.length;
+
+// Index of a step in the active flow, or -1 if that step is currently disabled.
+export const stepIndex = (id: StepId): number => STEPS.indexOf(id);
 
 // Completion rules per wizard step, shared by live validation (canProceed)
 // and by state restoration, so a stale saved session can never strand the
-// user past a step whose data is missing.
+// user past a step whose data is missing. Keyed by step id (not index) so the
+// rules follow the step regardless of its position in the flow.
 const isStepComplete = (state: BookingState, step: number): boolean => {
-  switch (step) {
-    case 0:
+  switch (STEPS[step]) {
+    case 'vehicle':
       return state.vehicle !== null;
-    case 1: {
+    case 'contact': {
       const age = Number(state.age);
       return (
         state.fullName.trim().length >= 2 &&
@@ -20,17 +37,17 @@ const isStepComplete = (state: BookingState, step: number): boolean => {
         age <= 120
       );
     }
-    case 2:
+    case 'details':
       return state.passengers > 0;
-    case 3:
+    case 'location':
       return (
         state.origin !== null &&
         state.destination !== null &&
         state.stops.every(stop => stop.address.trim().length > 0)
       );
-    case 4:
+    case 'schedule':
       return state.pickupDate !== null && state.pickupTime !== null;
-    case 5:
+    case 'review':
       return true;
     default:
       return false;
@@ -39,9 +56,9 @@ const isStepComplete = (state: BookingState, step: number): boolean => {
 
 // A restored session resumes at its saved step only if every prior step is
 // still complete; otherwise it resumes at the first incomplete step. A saved
-// "confirmed" screen (6) resumes at review (5).
+// "confirmed" screen resumes at the last navigable step (review).
 const clampRestoredStep = (state: BookingState): number => {
-  const target = Math.min(Math.max(state.currentStep, 0), 5);
+  const target = Math.min(Math.max(state.currentStep, 0), STEPS.length - 1);
   for (let step = 0; step < target; step++) {
     if (!isStepComplete(state, step)) return step;
   }
@@ -158,7 +175,7 @@ export const useBookingState = () => {
   }, []);
 
   const nextStep = useCallback(() => {
-    setState(prev => ({ ...prev, currentStep: Math.min(prev.currentStep + 1, 6) }));
+    setState(prev => ({ ...prev, currentStep: Math.min(prev.currentStep + 1, CONFIRMED_STEP) }));
   }, []);
 
   const prevStep = useCallback(() => {
@@ -166,7 +183,7 @@ export const useBookingState = () => {
   }, []);
 
   const goToStep = useCallback((step: number) => {
-    setState(prev => ({ ...prev, currentStep: Math.max(0, Math.min(step, 6)) }));
+    setState(prev => ({ ...prev, currentStep: Math.max(0, Math.min(step, CONFIRMED_STEP)) }));
   }, []);
 
   const setConfirmationCode = useCallback((code: string) => {

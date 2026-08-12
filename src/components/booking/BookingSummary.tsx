@@ -5,6 +5,7 @@ import { vehicles } from './VehicleSelection';
 import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { getDateLocale } from '@/lib/i18n';
+import { stepIndex } from '@/hooks/useBookingState';
 
 interface BookingSummaryProps {
   state: BookingState;
@@ -33,33 +34,33 @@ export const BookingSummary = ({ state, onEdit, onConfirm }: BookingSummaryProps
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Left column - Details */}
         <div className="lg:col-span-2 space-y-4">
-          {/* Vehicle */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="glass-card p-5"
-          >
-            <div className="flex items-start justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-20 h-14 rounded-lg bg-muted overflow-hidden">
-                  {vehicle && (
+          {/* Vehicle — hidden while the vehicle step is disabled (no car selected) */}
+          {vehicle && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="glass-card p-5"
+            >
+              <div className="flex items-start justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-20 h-14 rounded-lg bg-muted overflow-hidden">
                     <img src={vehicle.image} alt={vehicle.name} className="w-full h-full object-contain" />
-                  )}
-                </div>
-                <div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
-                    <Car className="w-4 h-4" />
-                    {t('bookingSummary.vehicle')}
                   </div>
-                  <p className="text-lg font-semibold text-foreground">{vehicleName}</p>
-                  <p className="text-sm text-muted-foreground">{vehicleModel}</p>
+                  <div>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
+                      <Car className="w-4 h-4" />
+                      {t('bookingSummary.vehicle')}
+                    </div>
+                    <p className="text-lg font-semibold text-foreground">{vehicleName}</p>
+                    <p className="text-sm text-muted-foreground">{vehicleModel}</p>
+                  </div>
                 </div>
+                <button onClick={() => onEdit(stepIndex('vehicle'))} className="p-2 rounded-lg hover:bg-muted transition-colors">
+                  <Edit2 className="w-4 h-4 text-muted-foreground" />
+                </button>
               </div>
-              <button onClick={() => onEdit(0)} className="p-2 rounded-lg hover:bg-muted transition-colors">
-                <Edit2 className="w-4 h-4 text-muted-foreground" />
-              </button>
-            </div>
-          </motion.div>
+            </motion.div>
+          )}
 
           {/* Contact */}
           <motion.div
@@ -79,7 +80,7 @@ export const BookingSummary = ({ state, onEdit, onConfirm }: BookingSummaryProps
                   {t('bookingSummary.ageValue', { age: state.age })}
                 </p>
               </div>
-              <button onClick={() => onEdit(1)} className="p-2 rounded-lg hover:bg-muted transition-colors">
+              <button onClick={() => onEdit(stepIndex('contact'))} className="p-2 rounded-lg hover:bg-muted transition-colors">
                 <Edit2 className="w-4 h-4 text-muted-foreground" />
               </button>
             </div>
@@ -97,7 +98,7 @@ export const BookingSummary = ({ state, onEdit, onConfirm }: BookingSummaryProps
                 <Users className="w-4 h-4" />
                 {t('bookingSummary.tripDetails')}
               </div>
-              <button onClick={() => onEdit(2)} className="p-2 rounded-lg hover:bg-muted transition-colors">
+              <button onClick={() => onEdit(stepIndex('details'))} className="p-2 rounded-lg hover:bg-muted transition-colors">
                 <Edit2 className="w-4 h-4 text-muted-foreground" />
               </button>
             </div>
@@ -159,7 +160,7 @@ export const BookingSummary = ({ state, onEdit, onConfirm }: BookingSummaryProps
                 <MapPin className="w-4 h-4" />
                 {t('bookingSummary.route')}
               </div>
-              <button onClick={() => onEdit(3)} className="p-2 rounded-lg hover:bg-muted transition-colors">
+              <button onClick={() => onEdit(stepIndex('location'))} className="p-2 rounded-lg hover:bg-muted transition-colors">
                 <Edit2 className="w-4 h-4 text-muted-foreground" />
               </button>
             </div>
@@ -235,7 +236,7 @@ export const BookingSummary = ({ state, onEdit, onConfirm }: BookingSummaryProps
                   </div>
                 </div>
               </div>
-              <button onClick={() => onEdit(4)} className="p-2 rounded-lg hover:bg-muted transition-colors">
+              <button onClick={() => onEdit(stepIndex('schedule'))} className="p-2 rounded-lg hover:bg-muted transition-colors">
                 <Edit2 className="w-4 h-4 text-muted-foreground" />
               </button>
             </div>

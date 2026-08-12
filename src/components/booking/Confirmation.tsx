@@ -48,13 +48,12 @@ export const Confirmation = ({ state, onBookAnother, onGoHome }: ConfirmationPro
     endDate.setMinutes(endDate.getMinutes() + state.duration);
     
     const event = {
-      title: t('confirmation.calendarTitle', { vehicle: vehicleName || vehicle?.name || '' }),
+      title: t('confirmation.calendarTitle'),
       start: startDate.toISOString().replace(/-|:|\.\d+/g, ''),
       end: endDate.toISOString().replace(/-|:|\.\d+/g, ''),
       location: state.origin?.address,
       description: t('confirmation.calendarDescription', {
         code: state.confirmationCode,
-        vehicle: vehicleName || vehicle?.name || '',
         origin: state.origin?.address,
         destination: state.destination?.address,
       }),
@@ -147,14 +146,19 @@ export const Confirmation = ({ state, onBookAnother, onGoHome }: ConfirmationPro
 
             {/* Booking details */}
             <div className="space-y-4 pt-6 border-t border-border">
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-12 rounded-lg bg-muted overflow-hidden flex-shrink-0">
-                  {vehicle && <img src={vehicle.image} alt={vehicle.name} className="w-full h-full object-contain" />}
-                </div>
-                <div className="flex-1">
-                  <p className="font-semibold text-foreground">{vehicleName}</p>
-                  <p className="text-sm text-muted-foreground">{vehicleModel}</p>
-                </div>
+              <div className="flex items-center justify-between gap-4">
+                {/* Vehicle image + name hidden while the vehicle step is disabled */}
+                {vehicle && (
+                  <div className="flex flex-1 items-center gap-4">
+                    <div className="w-16 h-12 rounded-lg bg-muted overflow-hidden flex-shrink-0">
+                      <img src={vehicle.image} alt={vehicle.name} className="w-full h-full object-contain" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-semibold text-foreground">{vehicleName}</p>
+                      <p className="text-sm text-muted-foreground">{vehicleModel}</p>
+                    </div>
+                  </div>
+                )}
                 <div className="text-right">
                   <p className="text-sm font-medium text-gradient-gold max-w-[120px]">
                     {t('confirmation.pricePending')}

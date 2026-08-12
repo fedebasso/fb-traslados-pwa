@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
-import { useBookingState } from '@/hooks/useBookingState';
+import { useBookingState, STEPS, CONFIRMED_STEP, StepId } from '@/hooks/useBookingState';
 import { generateConfirmationCode } from '@/services/confirmationCode';
 import { buildBookingMessage, openWhatsApp } from '@/services/whatsapp';
 import { StepIndicator } from './StepIndicator';
@@ -46,19 +46,23 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
 
   const [direction, setDirection] = useState(1);
   const { t } = useTranslation();
-  const stepLabels = [
-    t('bookingWizard.steps.vehicle'),
-    t('bookingWizard.steps.contact'),
-    t('bookingWizard.steps.details'),
-    t('bookingWizard.steps.location'),
-    t('bookingWizard.steps.schedule'),
-    t('bookingWizard.steps.review'),
-    t('bookingWizard.steps.confirmed'),
-  ];
-  
+
+  // Labels for the navigable steps, derived from the active flow config.
+  const stepLabelKeys: Record<StepId, string> = {
+    vehicle: 'bookingWizard.steps.vehicle',
+    contact: 'bookingWizard.steps.contact',
+    details: 'bookingWizard.steps.details',
+    location: 'bookingWizard.steps.location',
+    schedule: 'bookingWizard.steps.schedule',
+    review: 'bookingWizard.steps.review',
+  };
+  const stepLabels = STEPS.map(id => t(stepLabelKeys[id]));
+
   const selectedVehicle = vehicles.find(v => v.id === state.vehicle);
-  const maxPassengers = selectedVehicle?.passengers || 4;
-  const maxLuggage = selectedVehicle?.luggage || 3;
+  // Explicit defaults so passenger/luggage limits don't depend on a selected
+  // vehicle (the vehicle step is currently disabled).
+  const maxPassengers = selectedVehicle?.passengers ?? 4;
+  const maxLuggage = selectedVehicle?.luggage ?? 3;
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -92,7 +96,7 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
       : undefined;
     openWhatsApp(buildBookingMessage({ ...state, confirmationCode: code }, vehicleName));
     setDirection(1);
-    goToStep(6);
+    goToStep(CONFIRMED_STEP);
   };
 
   const handleBookAnother = () => {
@@ -117,10 +121,20 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
   };
 
   const renderStep = () => {
-    switch (state.currentStep) {
-      case 0:
+    if (state.currentStep === CONFIRMED_STEP) {
+      return (
+        <Confirmation
+          state={state}
+          onBookAnother={handleBookAnother}
+          onGoHome={onClose}
+        />
+      );
+    }
+
+    switch (STEPS[state.currentStep]) {
+      case 'vehicle':
         return <VehicleSelection selected={state.vehicle} onSelect={setVehicle} />;
-      case 1:
+      case 'contact':
         return (
           <ContactDetails
             fullName={state.fullName}
@@ -129,7 +143,7 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
             onAgeChange={setAge}
           />
         );
-      case 2:
+      case 'details':
         return (
           <TripDetails
             passengers={state.passengers}
@@ -146,7 +160,7 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
             onDrinksChange={setDrinks}
           />
         );
-      case 3:
+      case 'location':
         return (
           <LocationPicker
             origin={state.origin}
@@ -159,7 +173,7 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
             onStopsChange={setStops}
           />
         );
-      case 4:
+      case 'schedule':
         return (
           <DateTimePicker
             selectedDate={state.pickupDate}
@@ -168,20 +182,12 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
             onTimeChange={setPickupTime}
           />
         );
-      case 5:
+      case 'review':
         return (
           <BookingSummary
             state={state}
             onEdit={handleGoToStep}
             onConfirm={handleConfirm}
-          />
-        );
-      case 6:
-        return (
-          <Confirmation
-            state={state}
-            onBookAnother={handleBookAnother}
-            onGoHome={onClose}
           />
         );
       default:
@@ -197,7 +203,7 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
       className="fixed inset-0 z-50 bg-background flex flex-col"
     >
       {/* Header */}
-      {state.currentStep < 6 && (
+      {state.currentStep < CONFIRMED_STEP && (
         <div className="flex-shrink-0 z-10 bg-background/80 backdrop-blur-xl border-b border-border safe-px safe-pt">
           <div className="container mx-auto px-5 py-4">
             <div className="flex items-center justify-between mb-4">
@@ -214,8 +220,8 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
             </div>
             <StepIndicator
               currentStep={state.currentStep}
-              totalSteps={6}
-              stepLabels={stepLabels.slice(0, 6)}
+              totalSteps={STEPS.length}
+              stepLabels={stepLabels}
             />
           </div>
         </div>
@@ -244,7 +250,7 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
       </div>
 
       {/* Footer navigation */}
-      {state.currentStep < 5 && (
+      {state.currentStep < STEPS.length - 1 && (
         <div className="flex-shrink-0 bg-card/95 backdrop-blur-xl border-t border-border safe-px safe-pb shadow-[0_-6px_24px_hsl(30_25%_30%_/_0.08)]">
           <div className="container mx-auto px-5 py-3">
             <div className="flex items-center justify-between gap-2">
@@ -261,7 +267,7 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
               <p className="text-xs text-muted-foreground text-center">
                 {t('bookingWizard.stepOf', {
                   current: state.currentStep + 1,
-                  total: 6,
+                  total: STEPS.length,
                 })}
               </p>
 
