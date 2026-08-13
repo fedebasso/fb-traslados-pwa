@@ -5,11 +5,7 @@ import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 import fbLogo from "@/assets/logo-fb-dark.png";
 
-interface TopNavProps {
-  onBookNow?: () => void;
-}
-
-export const TopNav = ({ onBookNow }: TopNavProps) => {
+export const TopNav = () => {
   const { t, i18n } = useTranslation();
   const activeLanguage =
     languageOptions.find(lang => i18n.language?.startsWith(lang.code))?.code || i18n.language;
@@ -64,13 +60,6 @@ export const TopNav = ({ onBookNow }: TopNavProps) => {
               </div>
             </PopoverContent>
           </Popover>
-
-          <button
-            onClick={onBookNow}
-            className="btn-premium text-sm px-5 py-2 min-h-[48px] rounded-xl"
-          >
-            {t('nav.book')}
-          </button>
         </div>
       </div>
     </header>
