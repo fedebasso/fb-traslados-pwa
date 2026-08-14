@@ -164,7 +164,7 @@ export const Confirmation = ({ state, onBookAnother, onGoHome }: ConfirmationPro
                   </div>
                 )}
                 <div className="text-right">
-                  <p className="text-sm font-medium text-gradient-gold max-w-[120px]">
+                  <p className="text-sm font-medium text-gradient-gold">
                     {t('confirmation.pricePending')}
                   </p>
                 </div>
@@ -187,7 +187,8 @@ export const Confirmation = ({ state, onBookAnother, onGoHome }: ConfirmationPro
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">{t('confirmation.pickupTime')}</span>
                 <span className="text-foreground font-medium">
-                  {state.pickupDate && format(state.pickupDate, 'MMM d, yyyy', { locale: dateLocale })} {t('dateTimePicker.pickupAt', { time: state.pickupTime || '' })}
+                  {state.pickupDate && format(state.pickupDate, 'PPP', { locale: dateLocale })}
+                  {state.pickupTime && ` · ${state.pickupTime}`}
                 </span>
               </div>
 
@@ -231,7 +232,7 @@ export const Confirmation = ({ state, onBookAnother, onGoHome }: ConfirmationPro
             </button>
             <button
               onClick={onBookAnother}
-              className="flex-1 btn-premium justify-center"
+              className="flex-1 btn-premium justify-center px-6 py-3"
             >
               <Car className="w-5 h-5" />
               {t('confirmation.bookAnother')}
