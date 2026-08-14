@@ -7,6 +7,11 @@ export interface Location {
   placeId?: string;
 }
 
+export interface OrderItem {
+  text: string;
+  quantity: number;
+}
+
 export interface BookingState {
   currentStep: number;
   vehicle: VehicleType;
@@ -15,8 +20,8 @@ export interface BookingState {
   stops: Location[];
   passengers: number;
   luggage: number;
-  snacks: boolean;
-  drinks: string[];
+  snacks: OrderItem[];
+  drinks: OrderItem[];
   origin: Location | null;
   destination: Location | null;
   pickupDate: Date | null;

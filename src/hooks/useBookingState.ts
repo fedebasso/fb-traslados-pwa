@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
-import { BookingState, VehicleType, Location } from '@/types/booking.types';
+import { BookingState, VehicleType, Location, OrderItem } from '@/types/booking.types';
 
-// Bumped when the step order changes: a v1 session stored step numbers under
-// the old order, so reusing it could strand the user on the wrong screen.
-// Changing the key discards those stale sessions cleanly.
-const STORAGE_KEY = 'premium-shuttle-booking-v2';
+// Bumped when the stored shape changes: v2 sessions held snacks as a boolean,
+// drinks as string[] and a music field. v3 drops all of that, so reusing a v2
+// session would carry incompatible data. Changing the key discards those stale
+// sessions cleanly.
+const STORAGE_KEY = 'premium-shuttle-booking-v3';
 
 // Single source of truth for the wizard flow. Order, total, labels and every
 // numeric index are derived from this array — re-enabling a step is one line.
@@ -73,7 +74,7 @@ const initialState: BookingState = {
   stops: [],
   passengers: 1,
   luggage: 0,
-  snacks: false,
+  snacks: [],
   drinks: [],
   origin: null,
   destination: null,
@@ -84,16 +85,6 @@ const initialState: BookingState = {
 };
 
 export const useBookingState = () => {
-  const normalizeDrinks = (drinks: string[]) =>
-    drinks.map(drink => {
-      const lower = drink.toLowerCase();
-      if (lower.includes('sparkling')) return 'sparklingWater';
-      if (lower.includes('soft')) return 'softDrinks';
-      if (lower.includes('agua con gas')) return 'sparklingWater';
-      if (lower.includes('refriger')) return 'softDrinks';
-      return lower.includes('water') ? 'water' : drink;
-    });
-
   const [state, setState] = useState<BookingState>(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
@@ -102,7 +93,6 @@ export const useBookingState = () => {
         ...initialState,
         ...parsed,
         pickupDate: parsed.pickupDate ? new Date(parsed.pickupDate) : null,
-        drinks: parsed.drinks ? normalizeDrinks(parsed.drinks) : [],
       };
       return { ...restored, currentStep: clampRestoredStep(restored) };
     }
@@ -137,11 +127,11 @@ export const useBookingState = () => {
     setState(prev => ({ ...prev, luggage }));
   }, []);
 
-  const setSnacks = useCallback((snacks: boolean) => {
+  const setSnacks = useCallback((snacks: OrderItem[]) => {
     setState(prev => ({ ...prev, snacks }));
   }, []);
 
-  const setDrinks = useCallback((drinks: string[]) => {
+  const setDrinks = useCallback((drinks: OrderItem[]) => {
     setState(prev => ({ ...prev, drinks }));
   }, []);
 

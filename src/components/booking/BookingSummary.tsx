@@ -6,6 +6,7 @@ import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { getDateLocale } from '@/lib/i18n';
 import { stepIndex } from '@/hooks/useBookingState';
+import { formatOrderItems } from '@/lib/orderItems';
 
 interface BookingSummaryProps {
   state: BookingState;
@@ -118,21 +119,21 @@ export const BookingSummary = ({ state, onEdit, onConfirm }: BookingSummaryProps
                   {state.luggage}
                 </p>
               </div>
-              {state.snacks && (
-                <div>
+              {formatOrderItems(state.snacks) && (
+                <div className="col-span-2">
                   <p className="text-xs text-muted-foreground mb-1">{t('bookingSummary.snacks')}</p>
                   <p className="text-foreground font-medium flex items-center gap-2">
                     <Coffee className="w-4 h-4 text-primary" />
-                    {t('bookingSummary.snacksIncluded')}
+                    {formatOrderItems(state.snacks)}
                   </p>
                 </div>
               )}
-              {state.drinks.length > 0 && (
+              {formatOrderItems(state.drinks) && (
                 <div className="col-span-2">
                   <p className="text-xs text-muted-foreground mb-1">{t('bookingSummary.beverages')}</p>
                   <p className="text-foreground font-medium flex items-center gap-2">
                     <GlassWater className="w-4 h-4 text-primary" />
-                    {state.drinks.map(drink => t(`tripDetails.drinkOptions.${drink}`, { defaultValue: drink })).join(', ')}
+                    {formatOrderItems(state.drinks)}
                   </p>
                 </div>
               )}
