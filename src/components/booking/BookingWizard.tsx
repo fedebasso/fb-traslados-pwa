@@ -27,7 +27,6 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
     setStops,
     setPassengers,
     setLuggage,
-    setMusic,
     setSnacks,
     setDrinks,
     setOrigin,
@@ -148,14 +147,12 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
           <TripDetails
             passengers={state.passengers}
             luggage={state.luggage}
-            music={state.music}
             snacks={state.snacks}
             drinks={state.drinks}
             maxPassengers={maxPassengers}
             maxLuggage={maxLuggage}
             onPassengersChange={setPassengers}
             onLuggageChange={setLuggage}
-            onMusicChange={setMusic}
             onSnacksChange={setSnacks}
             onDrinksChange={setDrinks}
           />

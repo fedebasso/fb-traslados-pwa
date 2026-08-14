@@ -1,7 +1,5 @@
 export type VehicleType = 'byd' | 'onix' | null;
 
-export type MusicPreference = 'classical' | 'jazz' | 'pop' | 'electronic' | 'silence' | 'custom';
-
 export interface Location {
   address: string;
   lat?: number;
@@ -17,7 +15,6 @@ export interface BookingState {
   stops: Location[];
   passengers: number;
   luggage: number;
-  music: MusicPreference | null;
   snacks: boolean;
   drinks: string[];
   origin: Location | null;

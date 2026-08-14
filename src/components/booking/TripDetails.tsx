@@ -1,23 +1,18 @@
 import { motion } from 'framer-motion';
-import { Users, Briefcase, Music, Coffee, GlassWater, Minus, Plus } from 'lucide-react';
-import { MusicPreference } from '@/types/booking.types';
+import { Users, Briefcase, Coffee, GlassWater, Minus, Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-
-const musicOptions: MusicPreference[] = ['classical', 'jazz', 'pop', 'electronic', 'silence'];
 
 const drinkOptions = ['water', 'sparklingWater', 'softDrinks'];
 
 interface TripDetailsProps {
   passengers: number;
   luggage: number;
-  music: MusicPreference | null;
   snacks: boolean;
   drinks: string[];
   maxPassengers: number;
   maxLuggage: number;
   onPassengersChange: (value: number) => void;
   onLuggageChange: (value: number) => void;
-  onMusicChange: (value: MusicPreference | null) => void;
   onSnacksChange: (value: boolean) => void;
   onDrinksChange: (value: string[]) => void;
 }
@@ -25,14 +20,12 @@ interface TripDetailsProps {
 export const TripDetails = ({
   passengers,
   luggage,
-  music,
   snacks,
   drinks,
   maxPassengers,
   maxLuggage,
   onPassengersChange,
   onLuggageChange,
-  onMusicChange,
   onSnacksChange,
   onDrinksChange,
 }: TripDetailsProps) => {
@@ -138,31 +131,10 @@ export const TripDetails = ({
           className="glass-card p-6 space-y-6"
         >
           <h3 className="font-display text-lg font-semibold text-foreground flex items-center gap-2">
-            <Music className="w-5 h-5 text-primary" />
+            <Coffee className="w-5 h-5 text-primary" />
             {t('tripDetails.amenities')}
             <span className="text-xs font-normal text-muted-foreground">{t('tripDetails.optional')}</span>
           </h3>
-
-          {/* Music preference */}
-          <div className="space-y-3">
-            <label className="text-sm text-muted-foreground">{t('tripDetails.musicPreference')}</label>
-            <div className="flex flex-wrap gap-2">
-              {musicOptions.map(option => (
-                <button
-                  key={option}
-                  onClick={() => onMusicChange(music === option ? null : option)}
-                  className={`
-                    px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
-                    ${music === option 
-                      ? 'bg-primary text-primary-foreground' 
-                      : 'bg-muted text-muted-foreground hover:bg-muted/80'}
-                  `}
-                >
-                  {t(`tripDetails.musicOptions.${option}`)}
-                </button>
-              ))}
-            </div>
-          </div>
 
           {/* Snacks */}
           <div className="space-y-3">

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { BookingState, VehicleType, MusicPreference, Location } from '@/types/booking.types';
+import { BookingState, VehicleType, Location } from '@/types/booking.types';
 
 // Bumped when the step order changes: a v1 session stored step numbers under
 // the old order, so reusing it could strand the user on the wrong screen.
@@ -73,7 +73,6 @@ const initialState: BookingState = {
   stops: [],
   passengers: 1,
   luggage: 0,
-  music: null,
   snacks: false,
   drinks: [],
   origin: null,
@@ -136,10 +135,6 @@ export const useBookingState = () => {
 
   const setLuggage = useCallback((luggage: number) => {
     setState(prev => ({ ...prev, luggage }));
-  }, []);
-
-  const setMusic = useCallback((music: MusicPreference | null) => {
-    setState(prev => ({ ...prev, music }));
   }, []);
 
   const setSnacks = useCallback((snacks: boolean) => {
@@ -208,7 +203,6 @@ export const useBookingState = () => {
     setStops,
     setPassengers,
     setLuggage,
-    setMusic,
     setSnacks,
     setDrinks,
     setOrigin,

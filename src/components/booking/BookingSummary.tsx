@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Car, Users, Briefcase, Music, Coffee, GlassWater, MapPin, Calendar, Clock, Edit2, User, MessageCircle } from 'lucide-react';
+import { Car, Users, Briefcase, Coffee, GlassWater, MapPin, Calendar, Clock, Edit2, User, MessageCircle } from 'lucide-react';
 import { BookingState } from '@/types/booking.types';
 import { vehicles } from './VehicleSelection';
 import { format } from 'date-fns';
@@ -118,15 +118,6 @@ export const BookingSummary = ({ state, onEdit, onConfirm }: BookingSummaryProps
                   {state.luggage}
                 </p>
               </div>
-              {state.music && (
-                <div>
-                  <p className="text-xs text-muted-foreground mb-1">{t('bookingSummary.music')}</p>
-                  <p className="text-foreground font-medium flex items-center gap-2">
-                    <Music className="w-4 h-4 text-primary" />
-                    {t(`tripDetails.musicOptions.${state.music}`, { defaultValue: state.music })}
-                  </p>
-                </div>
-              )}
               {state.snacks && (
                 <div>
                   <p className="text-xs text-muted-foreground mb-1">{t('bookingSummary.snacks')}</p>
