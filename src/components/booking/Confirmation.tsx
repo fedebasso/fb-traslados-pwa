@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
-import { Check, CalendarPlus, Car, ArrowRight, Sparkles, Home, MessageCircle } from 'lucide-react';
+import { Check, CalendarPlus, Car, ArrowRight, Sparkles, Home, MessageCircle, Coffee, GlassWater } from 'lucide-react';
 import { BookingState } from '@/types/booking.types';
 import { vehicles } from './VehicleSelection';
 import { buildBookingMessage, getWhatsAppLink, openWhatsApp } from '@/services/whatsapp';
 import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { getDateLocale } from '@/lib/i18n';
+import { formatOrderItems } from '@/lib/orderItems';
 
 interface ConfirmationProps {
   state: BookingState;
@@ -36,6 +37,9 @@ export const Confirmation = ({ state, onBookAnother, onGoHome }: ConfirmationPro
     vehicle ? `${vehicle.name} (${vehicle.model})` : undefined,
   );
   const qrData = getWhatsAppLink(whatsAppMessage);
+
+  const snacksText = formatOrderItems(state.snacks);
+  const drinksText = formatOrderItems(state.drinks);
 
   const handleAddToCalendar = () => {
     if (!state.pickupDate || !state.pickupTime) return;
@@ -186,6 +190,25 @@ export const Confirmation = ({ state, onBookAnother, onGoHome }: ConfirmationPro
                   {state.pickupDate && format(state.pickupDate, 'MMM d, yyyy', { locale: dateLocale })} {t('dateTimePicker.pickupAt', { time: state.pickupTime || '' })}
                 </span>
               </div>
+
+              {(snacksText || drinksText) && (
+                <div className="pt-4 border-t border-border space-y-2">
+                  {snacksText && (
+                    <div className="flex items-center gap-2 text-sm">
+                      <Coffee className="w-4 h-4 text-primary" />
+                      <span className="text-muted-foreground">{t('bookingSummary.snacks')}:</span>
+                      <span className="text-foreground font-medium">{snacksText}</span>
+                    </div>
+                  )}
+                  {drinksText && (
+                    <div className="flex items-center gap-2 text-sm">
+                      <GlassWater className="w-4 h-4 text-primary" />
+                      <span className="text-muted-foreground">{t('bookingSummary.beverages')}:</span>
+                      <span className="text-foreground font-medium">{drinksText}</span>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 

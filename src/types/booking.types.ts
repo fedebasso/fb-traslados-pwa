@@ -1,12 +1,15 @@
 export type VehicleType = 'byd' | 'onix' | null;
 
-export type MusicPreference = 'classical' | 'jazz' | 'pop' | 'electronic' | 'silence' | 'custom';
-
 export interface Location {
   address: string;
   lat?: number;
   lng?: number;
   placeId?: string;
+}
+
+export interface OrderItem {
+  text: string;
+  quantity: number;
 }
 
 export interface BookingState {
@@ -17,9 +20,8 @@ export interface BookingState {
   stops: Location[];
   passengers: number;
   luggage: number;
-  music: MusicPreference | null;
-  snacks: boolean;
-  drinks: string[];
+  snacks: OrderItem[];
+  drinks: OrderItem[];
   origin: Location | null;
   destination: Location | null;
   pickupDate: Date | null;

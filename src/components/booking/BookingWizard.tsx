@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { useBookingState, STEPS, CONFIRMED_STEP, StepId } from '@/hooks/useBookingState';
 import { generateConfirmationCode } from '@/services/confirmationCode';
 import { buildBookingMessage, openWhatsApp } from '@/services/whatsapp';
+import { cleanOrderItems } from '@/lib/orderItems';
 import { StepIndicator } from './StepIndicator';
 import { VehicleSelection, vehicles } from './VehicleSelection';
 import { ContactDetails } from './ContactDetails';
@@ -27,7 +28,6 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
     setStops,
     setPassengers,
     setLuggage,
-    setMusic,
     setSnacks,
     setDrinks,
     setOrigin,
@@ -72,10 +72,14 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
   }, []);
 
   const handleNext = () => {
-    if (canProceed(state.currentStep)) {
-      setDirection(1);
-      nextStep();
+    if (!canProceed(state.currentStep)) return;
+    // Las filas vacías se descartan al salir del paso de detalles.
+    if (STEPS[state.currentStep] === 'details') {
+      setSnacks(cleanOrderItems(state.snacks));
+      setDrinks(cleanOrderItems(state.drinks));
     }
+    setDirection(1);
+    nextStep();
   };
 
   const handlePrev = () => {
@@ -148,14 +152,12 @@ export const BookingWizard = ({ onClose }: BookingWizardProps) => {
           <TripDetails
             passengers={state.passengers}
             luggage={state.luggage}
-            music={state.music}
             snacks={state.snacks}
             drinks={state.drinks}
             maxPassengers={maxPassengers}
             maxLuggage={maxLuggage}
             onPassengersChange={setPassengers}
             onLuggageChange={setLuggage}
-            onMusicChange={setMusic}
             onSnacksChange={setSnacks}
             onDrinksChange={setDrinks}
           />

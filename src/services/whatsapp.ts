@@ -2,6 +2,7 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { BookingState } from '@/types/booking.types';
 import { WHATSAPP_PHONE } from '@/config/contact';
+import { formatOrderItems } from '@/lib/orderItems';
 
 // The message is always built in Spanish: it is addressed to the operator,
 // not to the customer, regardless of the UI language.
@@ -35,13 +36,10 @@ export const buildBookingMessage = (state: BookingState, vehicleName?: string): 
   lines.push('');
   lines.push(`👥 *Pasajeros:* ${state.passengers}`);
   lines.push(`🧳 *Equipaje:* ${state.luggage > 0 ? `Sí, ${state.luggage} pieza(s)` : 'No'}`);
-  const drinkLabels: Record<string, string> = {
-    water: 'Agua',
-    sparklingWater: 'Agua con gas',
-    softDrinks: 'Refrescos',
-  };
-  const drinks = state.drinks.map(d => drinkLabels[d] ?? d).join(', ');
-  lines.push(`🥤 *Bebidas:* ${state.drinks.length > 0 ? `Sí (${drinks})` : 'No'}`);
+  const snacks = formatOrderItems(state.snacks);
+  const drinks = formatOrderItems(state.drinks);
+  lines.push(`🍪 *Snacks:* ${snacks || 'No'}`);
+  lines.push(`🥤 *Bebidas:* ${drinks || 'No'}`);
   // With vehicle selection disabled the operator assigns the car; keep an
   // explicit line so it's never ambiguous.
   lines.push(`🚘 *Vehículo:* ${vehicleName ?? 'A asignar por FB Traslados'}`);
