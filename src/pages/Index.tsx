@@ -9,7 +9,7 @@ const Index = () => {
 
   return (
     <main className="min-h-[100dvh] bg-background safe-px">
-      <TopNav />
+      <TopNav showBooking={showBooking} onHome={() => setShowBooking(false)} />
       <div className="pt-20">
         <AnimatePresence mode="wait">
           {!showBooking ? (

@@ -5,7 +5,14 @@ import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 import fbLogo from "@/assets/logo-fb-dark.png";
 
-export const TopNav = () => {
+interface TopNavProps {
+  // El logo del header solo aparece fuera del inicio: en el inicio la única
+  // marca es el logo grande del centro del hero.
+  showBooking: boolean;
+  onHome: () => void;
+}
+
+export const TopNav = ({ showBooking, onHome }: TopNavProps) => {
   const { t, i18n } = useTranslation();
   const activeLanguage =
     languageOptions.find(lang => i18n.language?.startsWith(lang.code))?.code || i18n.language;
@@ -17,16 +24,23 @@ export const TopNav = () => {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-40 border-b border-border/30 bg-background/60 backdrop-blur-xl safe-pt safe-px">
-      <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-        <a href="#" className="flex items-center" aria-label={t('nav.brand')}>
-          <img
-            src={fbLogo}
-            alt={t('nav.brand')}
-            className="h-11 w-auto object-contain"
-          />
-        </a>
+      {/* min-h fija (= alto del logo) para que la barra mida igual con y sin
+          logo: así el pt-20 de Index alinea igual y no hay salto al pasar de
+          inicio a wizard. */}
+      <div className="container mx-auto px-4 py-3 flex items-center justify-between min-h-[44px]">
+        {showBooking && (
+          <button type="button" onClick={onHome} className="flex items-center" aria-label={t('nav.brand')}>
+            <img
+              src={fbLogo}
+              alt={t('nav.brand')}
+              className="h-11 w-auto object-contain"
+            />
+          </button>
+        )}
 
-        <div className="flex items-center gap-2 sm:gap-3">
+        {/* ml-auto mantiene el selector a la derecha aunque el logo no se
+            renderice (con un solo hijo, justify-between lo mandaría a la izq). */}
+        <div className="flex items-center gap-2 sm:gap-3 ml-auto">
           <Popover>
             <PopoverTrigger asChild>
               <button
